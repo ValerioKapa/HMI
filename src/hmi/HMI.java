@@ -11,7 +11,7 @@ public class HMI extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("HmiFXML.fxml"));
-        primaryStage.setTitle("Hello World");
+        primaryStage.setTitle("Notepad--");
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }

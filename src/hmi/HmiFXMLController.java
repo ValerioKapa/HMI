@@ -1,45 +1,39 @@
 package hmi;
 
-import java.awt.Label;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import static java.lang.String.join;
+import java.io.PrintWriter;
 import java.net.URL;
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
-import javafx.scene.input.InputMethodEvent;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
 public class HmiFXMLController implements Initializable {
     
-    private boolean fileStatus = false;
-    private String filePath;
-    private String fn; // Its easy to get it for filePath too but I m kind of sleepy here
+    private File selectedFile = new File("New File");
     int wcount = 0;
     int lcount = 0;
     
@@ -62,13 +56,13 @@ public class HmiFXMLController implements Initializable {
     @FXML
     private TextArea taEdit;
     @FXML
-    private javafx.scene.control.Label detailFileName;
+    private Label detailFileName;
     @FXML
-    private javafx.scene.control.Label detailWords;
+    private Label detailWords;
     @FXML
-    private javafx.scene.control.Label detailLines;
+    private Label detailLines;
     @FXML
-    private javafx.scene.control.Label detailLastSaved;
+    private Label detailLastSaved;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -90,22 +84,11 @@ public class HmiFXMLController implements Initializable {
     @FXML
     private void openFile(ActionEvent event) throws FileNotFoundException, IOException {
         Window stage = details.getScene().getWindow();
-        // Create FileChooser
-        FileChooser fc = new FileChooser();
-        fc.setTitle("Open File");
-        fc.getExtensionFilters().addAll(
-                new ExtensionFilter("Text Files", "*.txt"));
-        // Here we are setting the path that we want to open
-        //if(System.getProperty("os.name").startsWith("Linux")) {
-        File dir = new File(System.getProperty("user.home"));
-        
-        fc.setInitialDirectory(dir);
+        FileChooser fc = createFileChooser("open");
         
         try {
-            File selectedFile = fc.showOpenDialog(stage);
-            filePath = selectedFile.getAbsolutePath();
-            // With String method substring selectedFile.getAbsolutePath().substring(lastIndexOf("\\") + 1);
-            fn = selectedFile.getName();
+            File sFile = fc.showOpenDialog(stage);
+            selectedFile = sFile;
             BufferedReader bfr = new BufferedReader(new FileReader(selectedFile));
         
             String line;
@@ -116,29 +99,51 @@ public class HmiFXMLController implements Initializable {
                 wcount += words.length;
                 lcount++;
             }
+            
+            detailFileName.setText(selectedFile.getName());
+            detailLastSaved.setText(String.valueOf(selectedFile.lastModified()));
+            detailWords.setText(String.valueOf(wcount));
+            detailLines.setText(String.valueOf(lcount));
         } catch(NullPointerException e) {
             System.out.println("The User didnt selected any file : " + e.toString());
         }
-        
-        detailFileName.setText(fn);
-        detailWords.setText(String.valueOf(wcount));
-        detailLines.setText(String.valueOf(lcount));
     }
 
     @FXML
     private void saveFile(ActionEvent event) {
+        if (selectedFile.getName() != null || !detailFileName.getText().equals(selectedFile.getName())) {
+            
+        } else {
+            File sFile = new File(selectedFile.getAbsolutePath());
+            Window stage = details.getScene().getWindow();
+            FileChooser fc = createFileChooser("save");
+            try {
+                fc.showSaveDialog(stage);
+            } catch (Exception e) {
+                System.out.println(e.toString());
+            }
+            saveTextToFile(selectedFile, taEdit.getText());
+        }
     }
 
     @FXML
     private void saveFileAs(ActionEvent event) {
+        Window stage = details.getScene().getWindow();
+        FileChooser fc = createFileChooser("save");
+        try {
+            File savedFile = fc.showSaveDialog(stage);
+            saveTextToFile(savedFile, taEdit.getText());
+        } catch (NullPointerException e) {
+            System.out.println(e.toString());
+        }
     }
 
     @FXML
     private void closeEditor(ActionEvent event) {
         Stage stage = (Stage) details.getScene().getWindow();
-        if(!fileStatus){
+        if(!selectedFile.getName().equals(detailFileName.getText())){
             Alert rusure = new Alert(AlertType.CONFIRMATION);
-            rusure.setContentText("Are you sure that you want to close the application?");
+            rusure.setContentText("Do you want to save the changes?");
             
             ButtonType btnSave = new ButtonType("Save");
             ButtonType btnNoSave = new ButtonType("Dont Save");
@@ -148,9 +153,45 @@ public class HmiFXMLController implements Initializable {
             
             Optional<ButtonType> opt = rusure.showAndWait();
             if(opt.get() == btnSave) {
-                File savedFile = new File(fn, filePath);
+                if (selectedFile != null) {
+                    saveTextToFile(selectedFile, taEdit.getText());
+                } else {
+                    FileChooser fc = createFileChooser("save");
+                    File savedFile = fc.showSaveDialog(stage);
+                    saveTextToFile(savedFile, taEdit.getText());
+                }
             } 
             if(opt.get() == btnNoSave) stage.close();
         }
+    }
+    
+    private FileChooser createFileChooser(String opt) {
+        FileChooser fc = new FileChooser();
+        if (opt.equals("open")) fc.setTitle("Open File");
+        else fc.setTitle("Save File");
+        fc.getExtensionFilters().addAll(
+                new ExtensionFilter("Text Files", "*.txt"));
+        // Here we are setting the path that we want to open
+        File dir = new File(System.getProperty("user.home"));
+        fc.setInitialDirectory(dir);
+        
+        return fc;
+    }
+    
+    private void saveTextToFile(File f, String cnt) {
+        try {
+            PrintWriter writer = new PrintWriter(f);
+            writer.println(cnt);
+            writer.close();
+        } catch (IOException e) {
+            System.out.println(e.toString());
+        }
+        detailFileName.setText(f.getName());
+    }
+    
+    private String convertTime(long time) {
+        Date date = new Date(time);
+        Format format = new SimpleDateFormat("yyyy MM dd HH:mm:ss");
+        return format.format(date);
     }
 }

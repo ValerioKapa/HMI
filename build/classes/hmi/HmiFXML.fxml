@@ -50,13 +50,13 @@
          <children>
             <SplitPane fx:id="fileName" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="21.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
                <items>
-                  <Label fx:id="detailFileName" alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="File Name" />
+                  <Label fx:id="detailFileName" alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="New File" />
                </items>
             </SplitPane>
             <SplitPane fx:id="wordsLines" dividerPositions="0.5" focusTraversable="false" prefHeight="22.0" prefWidth="204.0" HBox.hgrow="ALWAYS">
                <items>
-                  <Label fx:id="detailWords" alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Words" />
-                  <Label fx:id="detailLines" alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Lines" />
+                  <Label fx:id="detailWords" alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="0" />
+                  <Label fx:id="detailLines" alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="0" />
                </items>
             </SplitPane>
             <SplitPane fx:id="lastSaved" prefHeight="23.0" prefWidth="195.0" HBox.hgrow="ALWAYS">
