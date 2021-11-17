@@ -6,6 +6,7 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.RadioMenuItem?>
 <?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 
@@ -15,10 +16,10 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-                  <MenuItem mnemonicParsing="false" text="Open" />
-                  <MenuItem mnemonicParsing="false" text="Save" />
-                  <MenuItem mnemonicParsing="false" text="Save As" />
-              <MenuItem mnemonicParsing="false" text="Close" />
+                  <MenuItem fx:id="open" mnemonicParsing="false" onAction="#openFile" text="Open" />
+                  <MenuItem fx:id="save" mnemonicParsing="false" onAction="#saveFile" text="Save" />
+                  <MenuItem fx:id="saveAs" mnemonicParsing="false" onAction="#saveFileAs" text="Save As" />
+              <MenuItem fx:id="close" mnemonicParsing="false" onAction="#closeEditor" text="Close" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
@@ -49,21 +50,22 @@
          <children>
             <SplitPane fx:id="fileName" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="21.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
                <items>
-                  <Label alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="File Name" />
+                  <Label fx:id="detailFileName" alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="File Name" />
                </items>
             </SplitPane>
             <SplitPane fx:id="wordsLines" dividerPositions="0.5" focusTraversable="false" prefHeight="22.0" prefWidth="204.0" HBox.hgrow="ALWAYS">
                <items>
-                  <Label alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Words" />
-                  <Label alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Lines" />
+                  <Label fx:id="detailWords" alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Words" />
+                  <Label fx:id="detailLines" alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Lines" />
                </items>
             </SplitPane>
             <SplitPane fx:id="lastSaved" prefHeight="23.0" prefWidth="195.0" HBox.hgrow="ALWAYS">
                <items>
-                  <Label alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Last Saved" />
+                  <Label fx:id="detailLastSaved" alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Last Saved" />
                </items>
             </SplitPane>
          </children>
       </HBox>
+      <TextArea fx:id="taEdit" layoutY="28.0" maxHeight="1.7976931348623157E308" minHeight="-Infinity" onInputMethodTextChanged="#onTextChanged" prefHeight="350.0" prefWidth="600.0" AnchorPane.bottomAnchor="21.345988661271406" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="28.0" />
    </children>
 </AnchorPane>
