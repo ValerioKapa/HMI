@@ -38,7 +38,7 @@
                   <MenuItem mnemonicParsing="false" text="Export to PDF" />
               </items>
             </Menu>
-          <Menu mnemonicParsing="false" text="Help">
+          <Menu mnemonicParsing="false" text="More">
             <items>
                   <RadioMenuItem mnemonicParsing="false" text="Light Mode / Dark Mode" />
               <MenuItem mnemonicParsing="false" text="About" />
@@ -66,6 +66,6 @@
             </SplitPane>
          </children>
       </HBox>
-      <TextArea fx:id="taEdit" layoutY="28.0" maxHeight="1.7976931348623157E308" minHeight="-Infinity" onInputMethodTextChanged="#onTextChanged" prefHeight="350.0" prefWidth="600.0" AnchorPane.bottomAnchor="21.345988661271406" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="28.0" />
+      <TextArea fx:id="taEdit" layoutY="28.0" maxHeight="1.7976931348623157E308" minHeight="-Infinity" prefHeight="350.0" prefWidth="600.0" AnchorPane.bottomAnchor="21.345988661271406" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="28.0" />
    </children>
 </AnchorPane>

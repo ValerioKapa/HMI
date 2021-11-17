@@ -6,9 +6,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import static java.lang.String.join;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -37,6 +40,8 @@ public class HmiFXMLController implements Initializable {
     private boolean fileStatus = false;
     private String filePath;
     private String fn; // Its easy to get it for filePath too but I m kind of sleepy here
+    int wcount = 0;
+    int lcount = 0;
     
     @FXML
     private HBox details;
@@ -67,7 +72,19 @@ public class HmiFXMLController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+        taEdit.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> ov, String t, String t1) {
+                String dfn = detailFileName.getText();
+                if (!"*".equals(String.valueOf(dfn.charAt(dfn.length() - 1)))) 
+                    detailFileName.setText(detailFileName.getText() + "*");
+                if (taEdit.getText().isEmpty())
+                    wcount = lcount = 0;
+                detailWords.setText(String.valueOf(taEdit.getText().split("\\s+").length));
+                detailLines.setText(String.valueOf(taEdit.getText().split("\n").length));
+            }
+            
+        });
     }    
 
     @FXML
@@ -79,11 +96,10 @@ public class HmiFXMLController implements Initializable {
         fc.getExtensionFilters().addAll(
                 new ExtensionFilter("Text Files", "*.txt"));
         // Here we are setting the path that we want to open
-        File dir = new File("/home/dimitris/");
-        fc.setInitialDirectory(dir);
+        //if(System.getProperty("os.name").startsWith("Linux")) {
+        File dir = new File(System.getProperty("user.home"));
         
-        int wcount = 0;
-        int lcount = 0;
+        fc.setInitialDirectory(dir);
         
         try {
             File selectedFile = fc.showOpenDialog(stage);
@@ -101,7 +117,7 @@ public class HmiFXMLController implements Initializable {
                 lcount++;
             }
         } catch(NullPointerException e) {
-            System.out.println(e.toString());
+            System.out.println("The User didnt selected any file : " + e.toString());
         }
         
         detailFileName.setText(fn);
@@ -125,7 +141,7 @@ public class HmiFXMLController implements Initializable {
             rusure.setContentText("Are you sure that you want to close the application?");
             
             ButtonType btnSave = new ButtonType("Save");
-            ButtonType btnNoSave = new ButtonType("No Save");
+            ButtonType btnNoSave = new ButtonType("Dont Save");
             ButtonType btnCancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
             
             rusure.getButtonTypes().setAll(btnSave, btnNoSave, btnCancel);
@@ -137,10 +153,4 @@ public class HmiFXMLController implements Initializable {
             if(opt.get() == btnNoSave) stage.close();
         }
     }
-
-    @FXML
-    private void onTextChanged(InputMethodEvent event) {
-        detailFileName.setText(fn + "*");
-    }
-    
 }
