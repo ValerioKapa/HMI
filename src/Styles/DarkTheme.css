@@ -1,0 +1,32 @@
+.mainFxmlClass {
+    -fx-background-radius: 0;
+}
+
+.button{
+
+}
+
+.button:hover{
+    -fx-background-color: #6F6F89;
+}
+
+.primary-color{
+    -fx-background-color: #303030;
+    
+    -fx-control-inner-background: #303030;
+    -fx-text-box-border: #303030;
+}
+
+.secondary-color{
+    -fx-control-inner-background: #3F3F3F;
+    -fx-text-box-border: #303030;
+}
+
+.menu .label
+{
+    -fx-text-fill: #DFDFBF;
+}
+
+.text-color{
+    -fx-text-fill: #DFDFBF;
+}
