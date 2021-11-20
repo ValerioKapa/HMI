@@ -1,19 +1,23 @@
 package hmi;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.URL;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.Scanner;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -34,6 +38,8 @@ import javafx.stage.Window;
 public class HmiFXMLController implements Initializable {
     
     private File selectedFile = new File("New File");
+    boolean isNew = true;
+    boolean isModified = false;
     int wcount = 0;
     int lcount = 0;
     
@@ -69,60 +75,77 @@ public class HmiFXMLController implements Initializable {
         taEdit.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> ov, String t, String t1) {
-                String dfn = detailFileName.getText();
-                if (!"*".equals(String.valueOf(dfn.charAt(dfn.length() - 1)))) 
+                if (!isModified) {
+                    isModified = true;
                     detailFileName.setText(detailFileName.getText() + "*");
-                if (taEdit.getText().isEmpty())
-                    wcount = lcount = 0;
+                }
                 detailWords.setText(String.valueOf(taEdit.getText().split("\\s+").length));
                 detailLines.setText(String.valueOf(taEdit.getText().split("\n").length));
+                if (taEdit.getText().isEmpty()) {
+                    wcount = lcount = 0;
+                    detailWords.setText("0");
+                    detailLines.setText("0");
+                }
             }
-            
         });
     }    
 
     @FXML
     private void openFile(ActionEvent event) throws FileNotFoundException, IOException {
+        isNew = false;
+        if (isModified) closeOperation();
         Window stage = details.getScene().getWindow();
         FileChooser fc = createFileChooser("open");
-        
         try {
             File sFile = fc.showOpenDialog(stage);
             selectedFile = sFile;
-            BufferedReader bfr = new BufferedReader(new FileReader(selectedFile));
-        
+            taEdit.clear();
+            Scanner line = new Scanner(selectedFile);
+            while (line.hasNextLine()) {
+                taEdit.appendText(line.nextLine());
+                if (line.hasNext())
+                    taEdit.appendText("\n");
+                String words[] = line.toString().split("\\s+");
+                wcount += words.length;
+                lcount++;
+                
+                isModified = false;
+        }
+            /*BufferedReader bfr = new BufferedReader(new FileReader(selectedFile));
             String line;
             while ((line = bfr.readLine()) != null) {
                 taEdit.appendText(line);
-                taEdit.appendText("\n");
+                if (!(bfr.readLine() == null)) //We need to fix this prompt!
+                    taEdit.appendText("\n");
                 String words[] = line.split("\\s+");
                 wcount += words.length;
                 lcount++;
-            }
-            
+                
+                isModified = false;
+            }*/
             detailFileName.setText(selectedFile.getName());
-            detailLastSaved.setText(String.valueOf(selectedFile.lastModified()));
+            detailLastSaved.setText(convertTime(selectedFile.lastModified()));
             detailWords.setText(String.valueOf(wcount));
             detailLines.setText(String.valueOf(lcount));
-        } catch(NullPointerException e) {
+        } catch(Exception e) {
             System.out.println("The User didnt selected any file : " + e.toString());
         }
     }
 
     @FXML
     private void saveFile(ActionEvent event) {
-        if (selectedFile.getName() != null || !detailFileName.getText().equals(selectedFile.getName())) {
-            
-        } else {
-            File sFile = new File(selectedFile.getAbsolutePath());
-            Window stage = details.getScene().getWindow();
-            FileChooser fc = createFileChooser("save");
-            try {
-                fc.showSaveDialog(stage);
-            } catch (Exception e) {
-                System.out.println(e.toString());
+        Window stage = details.getScene().getWindow();
+        FileChooser fc = createFileChooser("save");
+        if (isModified) {
+            if (isNew) {
+                try {
+                    File newFile = fc.showSaveDialog(stage);
+                    saveTextToFile(newFile);
+                } catch (Exception e) {
+                    System.out.println("The User didnt selected any file : " + e.toString());
+                }
             }
-            saveTextToFile(selectedFile, taEdit.getText());
+            saveTextToFile(selectedFile);
         }
     }
 
@@ -132,7 +155,7 @@ public class HmiFXMLController implements Initializable {
         FileChooser fc = createFileChooser("save");
         try {
             File savedFile = fc.showSaveDialog(stage);
-            saveTextToFile(savedFile, taEdit.getText());
+            saveTextToFile(savedFile);
         } catch (NullPointerException e) {
             System.out.println(e.toString());
         }
@@ -141,28 +164,8 @@ public class HmiFXMLController implements Initializable {
     @FXML
     private void closeEditor(ActionEvent event) {
         Stage stage = (Stage) details.getScene().getWindow();
-        if(!selectedFile.getName().equals(detailFileName.getText())){
-            Alert rusure = new Alert(AlertType.CONFIRMATION);
-            rusure.setContentText("Do you want to save the changes?");
-            
-            ButtonType btnSave = new ButtonType("Save");
-            ButtonType btnNoSave = new ButtonType("Dont Save");
-            ButtonType btnCancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
-            
-            rusure.getButtonTypes().setAll(btnSave, btnNoSave, btnCancel);
-            
-            Optional<ButtonType> opt = rusure.showAndWait();
-            if(opt.get() == btnSave) {
-                if (selectedFile != null) {
-                    saveTextToFile(selectedFile, taEdit.getText());
-                } else {
-                    FileChooser fc = createFileChooser("save");
-                    File savedFile = fc.showSaveDialog(stage);
-                    saveTextToFile(savedFile, taEdit.getText());
-                }
-            } 
-            if(opt.get() == btnNoSave) stage.close();
-        }
+        if(isModified) closeOperation();
+        else stage.close();
     }
     
     private FileChooser createFileChooser(String opt) {
@@ -178,20 +181,53 @@ public class HmiFXMLController implements Initializable {
         return fc;
     }
     
-    private void saveTextToFile(File f, String cnt) {
+    private void saveTextToFile(File f) {
+        ObservableList<CharSequence> paragraph = taEdit.getParagraphs();
+        Iterator<CharSequence> iter = paragraph.iterator();
         try {
-            PrintWriter writer = new PrintWriter(f);
-            writer.println(cnt);
+            File file = new File(f.getAbsolutePath());
+            f.delete();
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+            while (iter.hasNext()) {
+                CharSequence seq = iter.next();
+                writer.append(seq);
+                writer.newLine();
+            }
+            writer.flush();
             writer.close();
-        } catch (IOException e) {
+            detailFileName.setText(file.getName());
+            detailLastSaved.setText(convertTime(f.lastModified()));
+        } catch (Exception e) {
             System.out.println(e.toString());
         }
-        detailFileName.setText(f.getName());
+        isModified = isNew = false;
     }
     
     private String convertTime(long time) {
         Date date = new Date(time);
-        Format format = new SimpleDateFormat("yyyy MM dd HH:mm:ss");
+        Format format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         return format.format(date);
+    }
+    
+    private void closeOperation() {
+        Stage stage = (Stage) details.getScene().getWindow();
+        Alert rusure = new Alert(AlertType.CONFIRMATION);
+        rusure.setContentText("Do you want to save the changes?");
+            
+        ButtonType btnSave = new ButtonType("Save");
+        ButtonType btnNoSave = new ButtonType("Dont Save");
+        ButtonType btnCancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
+            
+        rusure.getButtonTypes().setAll(btnSave, btnNoSave, btnCancel);
+            
+        Optional<ButtonType> opt = rusure.showAndWait();
+        if(opt.get() == btnSave &&  isNew) {
+            FileChooser fc = createFileChooser("save");
+            File savedFile = fc.showSaveDialog(stage);
+            saveTextToFile(savedFile);
+        }
+        else if (opt.get() == btnSave) saveTextToFile(selectedFile);
+        else if(opt.get() == btnNoSave && isModified) rusure.close();
+        else stage.close();
     }
 }
