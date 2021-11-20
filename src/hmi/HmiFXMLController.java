@@ -6,7 +6,6 @@ import com.pdfjet.Font;
 import com.pdfjet.PDF;
 import com.pdfjet.Page;
 import com.pdfjet.Paragraph;
-import com.pdfjet.TextBox;
 import com.pdfjet.TextColumn;
 import com.pdfjet.TextLine;
 import java.io.BufferedOutputStream;
@@ -36,10 +35,10 @@ import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Slider;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
-import static javafx.scene.text.Font.font;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
@@ -77,6 +76,9 @@ public class HmiFXMLController implements Initializable {
     private Label detailLines;
     @FXML
     private Label detailLastSaved;
+    @FXML
+    private Slider fontSlider;
+    private int fontSize = 18;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -91,6 +93,11 @@ public class HmiFXMLController implements Initializable {
                 detailWords.setText(String.valueOf(taEdit.getText().split("\\s+").length));
                 detailLines.setText(String.valueOf(taEdit.getText().split("\n").length));
             }
+        });
+        
+        fontSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+
+            taEdit.setStyle("-fx-font-size: " + newValue.intValue() + "px");
         });
     }    
     
@@ -258,5 +265,5 @@ public class HmiFXMLController implements Initializable {
             
         }
         
-    }
+    }  
 }
