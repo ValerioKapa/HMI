@@ -1,0 +1,67 @@
+.root {
+    /* A bright blue for highlighting/accenting objects.  For example: selected
+     * text; selected items in menus, lists, trees, and tables; progress bars;
+     * default buttons.
+     
+    -fx-accent: #F7CA88;
+    
+    A bright blue for the focus indicator of objects. Typically used as the
+     * first color in -fx-background-color for the "focused" pseudo-class. Also
+     * typically used with insets of -1.4 to provide a glowing effect.
+     *
+     * TODO: should this be derived from -fx-accent?
+     
+    -fx-focus-color: #9a32a6;
+    */
+}
+
+.mainFxmlClass {
+    -fx-background-radius: 0;
+}
+
+.button:hover{
+    -fx-background-color: #F7CA88;
+}
+
+/*olo to menu bar*/
+.menu-bar {
+    -fx-background-color: #FFFFFF;
+    -fx-focused-text-base-color: black;
+
+}
+/*koubia pano sto menu*/
+.menu-button:hover {
+     -fx-background-color: #FFE0B6;
+     -fx-text-background-color: black;
+}
+
+.menu-button:focused {
+     -fx-background-color: #F7CA88;
+     -fx-text-background-color: black;
+}
+
+.menu-button:showing {
+     -fx-background-color: #F7CA88;
+     -fx-text-background-color: black;
+}
+
+/*h lista pou vgenei otan patas ena koubi sto menu*/
+.menu-item:hover {
+     -fx-background-color: #F7CA88;
+}
+
+.menu-item:focused {
+     -fx-background-color: #F7CA88;
+}
+
+.text-area:focused{
+    -fx-faint-focus-color: transparent;
+    -fx-focus-color: #FFFFFF;
+}
+
+/*genika colors*/
+.primary-color{
+}
+
+.secondary-color{
+}

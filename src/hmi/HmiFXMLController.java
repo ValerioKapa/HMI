@@ -1,9 +1,19 @@
 package hmi;
 
+import com.pdfjet.A4;
+import com.pdfjet.CoreFont;
+import com.pdfjet.Font;
+import com.pdfjet.PDF;
+import com.pdfjet.Page;
+import com.pdfjet.Paragraph;
+import com.pdfjet.TextColumn;
+import com.pdfjet.TextLine;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -14,7 +24,12 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Optional;
 import java.util.ResourceBundle;
+<<<<<<< HEAD
 import java.util.Scanner;
+=======
+import java.util.logging.Level;
+import java.util.logging.Logger;
+>>>>>>> 589f19289f914b3e9cb1095e1fdfa963ed2b16f4
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -27,6 +42,7 @@ import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Slider;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
@@ -69,6 +85,9 @@ public class HmiFXMLController implements Initializable {
     private Label detailLines;
     @FXML
     private Label detailLastSaved;
+    @FXML
+    private Slider fontSlider;
+    private int fontSize = 18;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -88,8 +107,13 @@ public class HmiFXMLController implements Initializable {
                 }
             }
         });
-    }    
+        
+        fontSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
 
+            taEdit.setStyle("-fx-font-size: " + newValue.intValue() + "px");
+        });
+    }    
+    
     @FXML
     private void openFile(ActionEvent event) throws FileNotFoundException, IOException {
         isNew = false;
@@ -164,8 +188,33 @@ public class HmiFXMLController implements Initializable {
     @FXML
     private void closeEditor(ActionEvent event) {
         Stage stage = (Stage) details.getScene().getWindow();
+<<<<<<< HEAD
         if(isModified) closeOperation();
         else stage.close();
+=======
+        if(!selectedFile.getName().equals(detailFileName.getText())){
+            Alert rusure = new Alert(AlertType.CONFIRMATION);
+            rusure.setContentText("Do you want to save all changes?");
+            
+            ButtonType btnSave = new ButtonType("Save");
+            ButtonType btnNoSave = new ButtonType("Dont Save");
+            ButtonType btnCancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
+            
+            rusure.getButtonTypes().setAll(btnSave, btnNoSave, btnCancel);
+            
+            Optional<ButtonType> opt = rusure.showAndWait();
+            if(opt.get() == btnSave) {
+                if (selectedFile != null) {
+                    saveTextToFile(selectedFile, taEdit.getText());
+                } else {
+                    FileChooser fc = createFileChooser("save");
+                    File savedFile = fc.showSaveDialog(stage);
+                    saveTextToFile(savedFile, taEdit.getText());
+                }
+            } 
+            if(opt.get() == btnNoSave) stage.close();
+        }
+>>>>>>> 589f19289f914b3e9cb1095e1fdfa963ed2b16f4
     }
     
     private FileChooser createFileChooser(String opt) {
@@ -209,6 +258,7 @@ public class HmiFXMLController implements Initializable {
         return format.format(date);
     }
     
+<<<<<<< HEAD
     private void closeOperation() {
         Stage stage = (Stage) details.getScene().getWindow();
         Alert rusure = new Alert(AlertType.CONFIRMATION);
@@ -230,4 +280,57 @@ public class HmiFXMLController implements Initializable {
         else if(opt.get() == btnNoSave && isModified) rusure.close();
         else stage.close();
     }
+=======
+    @FXML
+    private void pdfExport(ActionEvent event) throws Exception{
+        
+        taEdit.setWrapText(false);
+        
+        Stage stage = (Stage) details.getScene().getWindow();
+        
+        FileChooser fc = new FileChooser();
+        
+        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Document", "*.pdf"));
+        fc.setTitle("Save to PDF");
+        fc.setInitialFileName("untitled");
+        
+        File file = fc.showSaveDialog(stage);
+        
+        if (file != null){
+            
+            String str = file.getAbsolutePath();
+            
+            try {
+                FileOutputStream fos = new FileOutputStream(str);
+                BufferedOutputStream bos = new BufferedOutputStream(fos);
+                
+                PDF pdf = new PDF(bos);
+                Page page = new Page(pdf, A4.PORTRAIT);
+                
+                Font font = new Font(pdf, CoreFont.HELVETICA);
+                
+                Paragraph paragraph = new Paragraph();
+                paragraph.add(new TextLine(font, taEdit.getText().replaceAll("\n", System.getProperty("line.separator"))));
+                //paragraph.add(new TextLine(font, taEdit.getText()));
+                
+                TextColumn column = new TextColumn();
+                column.setLocation(50f, 50f);
+                column.setSize(540f, 0f);
+                // column.SetLineBetweenParagraphs(true);
+                column.setLineBetweenParagraphs(false);
+                column.addParagraph(paragraph);
+                
+                float[] point = column.drawOn(page);
+                
+                pdf.complete();
+                fos.flush();
+                
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(HmiFXMLController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+        }
+        
+    }  
+>>>>>>> 589f19289f914b3e9cb1095e1fdfa963ed2b16f4
 }

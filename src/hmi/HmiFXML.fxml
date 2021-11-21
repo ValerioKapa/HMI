@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
@@ -11,8 +16,8 @@
 <?import javafx.scene.layout.HBox?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hmi.HmiFXMLController">
-   <children>
-      <MenuBar maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="27.97" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+<children>
+       <MenuBar maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="27.97" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
@@ -34,16 +39,24 @@
           </Menu>
             <Menu mnemonicParsing="false" text="Print">
               <items>
-                <MenuItem mnemonicParsing="false" text="Print" />
-                  <MenuItem mnemonicParsing="false" text="Export to PDF" />
+                  <MenuItem mnemonicParsing="false" onAction="#pdfExport" text="Export to PDF" />
               </items>
             </Menu>
           <Menu mnemonicParsing="false" text="More">
             <items>
-                  <RadioMenuItem mnemonicParsing="false" text="Light Mode / Dark Mode" />
-              <MenuItem mnemonicParsing="false" text="About" />
+                  <RadioMenuItem fx:id="lightThemeButton" mnemonicParsing="false" text="Light Theme">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="themeToggleGroup" />
+                     </toggleGroup>
+                  </RadioMenuItem>
+                  <RadioMenuItem fx:id="darkThemeButton" mnemonicParsing="false" text="Dark Theme" toggleGroup="$themeToggleGroup" />
             </items>
           </Menu>
+            <Menu mnemonicParsing="false" text="Font Size">
+               <graphic>
+                  <Slider fx:id="fontSlider" majorTickUnit="5.0" max="36.0" min="10.0" minorTickCount="1" prefHeight="0.0" prefWidth="140.0" snapToTicks="true" />
+               </graphic>
+            </Menu>
         </menus>
       </MenuBar>
       <HBox fx:id="details" alignment="CENTER" fillHeight="false" layoutY="384.0" maxHeight="20.0" maxWidth="1.7976931348623157E308" minHeight="20.0" prefHeight="20.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
@@ -66,6 +79,9 @@
             </SplitPane>
          </children>
       </HBox>
-      <TextArea fx:id="taEdit" layoutY="28.0" maxHeight="1.7976931348623157E308" minHeight="-Infinity" prefHeight="350.0" prefWidth="600.0" AnchorPane.bottomAnchor="21.345988661271406" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="28.0" />
+      <TextArea fx:id="taEdit" layoutY="28.0" maxHeight="1.7976931348623157E308" minHeight="-Infinity" prefHeight="350.0" prefWidth="600.0" AnchorPane.bottomAnchor="21.345988661271406" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="28.0">
+         <font>
+            <Font size="18.0" />
+         </font></TextArea>
    </children>
 </AnchorPane>
