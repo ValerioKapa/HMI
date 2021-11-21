@@ -9,12 +9,10 @@ import com.pdfjet.Paragraph;
 import com.pdfjet.TextColumn;
 import com.pdfjet.TextLine;
 import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
@@ -24,12 +22,9 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Optional;
 import java.util.ResourceBundle;
-<<<<<<< HEAD
 import java.util.Scanner;
-=======
 import java.util.logging.Level;
 import java.util.logging.Logger;
->>>>>>> 589f19289f914b3e9cb1095e1fdfa963ed2b16f4
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -188,33 +183,8 @@ public class HmiFXMLController implements Initializable {
     @FXML
     private void closeEditor(ActionEvent event) {
         Stage stage = (Stage) details.getScene().getWindow();
-<<<<<<< HEAD
         if(isModified) closeOperation();
         else stage.close();
-=======
-        if(!selectedFile.getName().equals(detailFileName.getText())){
-            Alert rusure = new Alert(AlertType.CONFIRMATION);
-            rusure.setContentText("Do you want to save all changes?");
-            
-            ButtonType btnSave = new ButtonType("Save");
-            ButtonType btnNoSave = new ButtonType("Dont Save");
-            ButtonType btnCancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
-            
-            rusure.getButtonTypes().setAll(btnSave, btnNoSave, btnCancel);
-            
-            Optional<ButtonType> opt = rusure.showAndWait();
-            if(opt.get() == btnSave) {
-                if (selectedFile != null) {
-                    saveTextToFile(selectedFile, taEdit.getText());
-                } else {
-                    FileChooser fc = createFileChooser("save");
-                    File savedFile = fc.showSaveDialog(stage);
-                    saveTextToFile(savedFile, taEdit.getText());
-                }
-            } 
-            if(opt.get() == btnNoSave) stage.close();
-        }
->>>>>>> 589f19289f914b3e9cb1095e1fdfa963ed2b16f4
     }
     
     private FileChooser createFileChooser(String opt) {
@@ -258,7 +228,6 @@ public class HmiFXMLController implements Initializable {
         return format.format(date);
     }
     
-<<<<<<< HEAD
     private void closeOperation() {
         Stage stage = (Stage) details.getScene().getWindow();
         Alert rusure = new Alert(AlertType.CONFIRMATION);
@@ -280,7 +249,6 @@ public class HmiFXMLController implements Initializable {
         else if(opt.get() == btnNoSave && isModified) rusure.close();
         else stage.close();
     }
-=======
     @FXML
     private void pdfExport(ActionEvent event) throws Exception{
         
@@ -331,6 +299,5 @@ public class HmiFXMLController implements Initializable {
             
         }
         
-    }  
->>>>>>> 589f19289f914b3e9cb1095e1fdfa963ed2b16f4
+    }
 }
