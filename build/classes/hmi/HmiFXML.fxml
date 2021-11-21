@@ -52,6 +52,8 @@
                   <RadioMenuItem fx:id="darkThemeButton" mnemonicParsing="false" text="Dark Theme" toggleGroup="$themeToggleGroup" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#aboutWindow" text="About" />
+                  <MenuItem mnemonicParsing="false" onAction="#selectBeggin" text="Select Beggin" />
+                  <MenuItem mnemonicParsing="false" onAction="#selectEnd" text="Select End" />
             </items>
           </Menu>
             <Menu mnemonicParsing="false" text="Font Size">

@@ -9,7 +9,6 @@ import com.pdfjet.TextBox;
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -44,7 +43,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
@@ -86,6 +84,8 @@ public class HmiFXMLController implements Initializable {
     private Label detailLastSaved;
     @FXML
     private Slider fontSlider;
+    @FXML
+    private int caretPossitionA;
     private int fontSize = 18;
     
     @Override
@@ -97,6 +97,7 @@ public class HmiFXMLController implements Initializable {
                     isModified = true;
                     detailFileName.setText(detailFileName.getText() + "*");
                 }
+                
                 detailWords.setText(String.valueOf(taEdit.getText().split("\\s+").length));
                 detailLines.setText(String.valueOf(taEdit.getText().split("\n").length));
                 if (taEdit.getText().isEmpty()) {
@@ -341,4 +342,16 @@ public class HmiFXMLController implements Initializable {
         
 	newWindow.show();        
     }
+    
+    @FXML 
+    private void selectBeggin(ActionEvent event){
+        taEdit.requestFocus(); 
+        caretPossitionA = taEdit.getCaretPosition();    
+    }
+
+    @FXML 
+    private void selectEnd(ActionEvent event){
+        taEdit.requestFocus(); 
+        taEdit.selectRange(caretPossitionA, taEdit.getCaretPosition());    
+    }    
 }
