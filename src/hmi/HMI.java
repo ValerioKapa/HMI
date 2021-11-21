@@ -17,9 +17,9 @@ public class HMI extends Application {
         Scene scene = new Scene(root);
         primaryStage.setTitle("Notepad--");
         primaryStage.setScene(scene);
-//        scene.getStylesheets().add(getClass().getResource("/styles/DarkTheme.css").toExternalForm());
-        scene.getStylesheets().add(getClass().getResource("/styles/LightTheme.css").toExternalForm());
-        Image icon = new Image(getClass().getResourceAsStream("/images/orange_frog.png"));
+//      scene.getStylesheets().add(getClass().getResource("/styles/DarkTheme.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/Styles/LightTheme.css").toExternalForm());
+        Image icon = new Image(getClass().getResourceAsStream("/Images/orange_frog.png"));
         primaryStage.getIcons().add(icon);
         primaryStage.show();
         

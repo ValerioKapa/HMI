@@ -37,9 +37,11 @@ import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -49,10 +51,11 @@ import javafx.stage.Window;
 public class HmiFXMLController implements Initializable {
     
     private File selectedFile = new File("New File");
-    boolean isNew = true;
-    boolean isModified = false;
-    int wcount = 0;
-    int lcount = 0;
+    private boolean isNew = true;
+    private boolean isModified = false;
+    private int wcount = 0;
+    private int lcount = 0;
+    private int fontSize = 18;
     
     @FXML
     private HBox details;
@@ -82,7 +85,12 @@ public class HmiFXMLController implements Initializable {
     private Label detailLastSaved;
     @FXML
     private Slider fontSlider;
-    private int fontSize = 18;
+    @FXML
+    private RadioMenuItem lightThemeButton;
+    @FXML
+    private ToggleGroup themeToggleGroup;
+    @FXML
+    private RadioMenuItem darkThemeButton;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -249,6 +257,7 @@ public class HmiFXMLController implements Initializable {
         else if(opt.get() == btnNoSave && isModified) rusure.close();
         else stage.close();
     }
+    
     @FXML
     private void pdfExport(ActionEvent event) throws Exception{
         
@@ -296,8 +305,6 @@ public class HmiFXMLController implements Initializable {
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(HmiFXMLController.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
         }
-        
     }
 }
