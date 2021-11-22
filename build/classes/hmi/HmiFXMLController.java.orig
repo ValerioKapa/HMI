@@ -7,12 +7,35 @@ import com.pdfjet.PDF;
 import com.pdfjet.Page;
 import com.pdfjet.TextBox;
 import java.io.BufferedOutputStream;
+<<<<<<< HEAD
+||||||| c297c67
 import java.io.BufferedReader;
+=======
+<<<<<<< HEAD
+import java.io.BufferedReader;
+>>>>>>> ValerioKapa-master
 import java.io.BufferedWriter;
+||||||| 589f192
+import java.io.BufferedReader;
+=======
+import java.io.BufferedWriter;
+>>>>>>> 7355c987aec9c0c6dbcce450058798d581ad2143
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+<<<<<<< HEAD
+||||||| c297c67
+import java.io.FileReader;
+=======
+<<<<<<< HEAD
+import java.io.FileReader;
+>>>>>>> ValerioKapa-master
 import java.io.FileWriter;
+||||||| 589f192
+import java.io.FileReader;
+=======
+import java.io.FileWriter;
+>>>>>>> 7355c987aec9c0c6dbcce450058798d581ad2143
 import java.io.IOException;
 import java.net.URL;
 import java.text.Format;
@@ -21,7 +44,24 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Optional;
 import java.util.ResourceBundle;
+<<<<<<< HEAD
+||||||| c297c67
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> ValerioKapa-master
 import java.util.Scanner;
+<<<<<<< HEAD
+||||||| c297c67
+=======
+=======
+=======
+||||||| 589f192
+=======
+import java.util.Scanner;
+>>>>>>> 7355c987aec9c0c6dbcce450058798d581ad2143
+>>>>>>> ValerioKapa-master
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
@@ -41,9 +81,13 @@ import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
+<<<<<<< HEAD
 import javafx.scene.control.ToggleGroup;
+||||||| c297c67
+=======
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+>>>>>>> ValerioKapa-master
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
@@ -58,7 +102,6 @@ public class HmiFXMLController implements Initializable {
     private boolean isModified = false;
     private int wcount = 0;
     private int lcount = 0;
-    private int caretPossitionA;
     private final int fontSize = 18;
     
     @FXML
@@ -89,12 +132,20 @@ public class HmiFXMLController implements Initializable {
     private Label detailLastSaved;
     @FXML
     private Slider fontSlider;
+<<<<<<< HEAD
     @FXML
     private RadioMenuItem lightThemeButton;
     @FXML
     private ToggleGroup themeToggleGroup;
     @FXML
     private RadioMenuItem darkThemeButton;
+||||||| c297c67
+    private int fontSize = 18;
+=======
+    @FXML
+    private int caretPossitionA;
+    private int fontSize = 18;
+>>>>>>> ValerioKapa-master
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -104,9 +155,15 @@ public class HmiFXMLController implements Initializable {
                 if (!isModified) {
                     isModified = true;
                     detailFileName.setText(detailFileName.getText() + "*");
+<<<<<<< HEAD
                 }
+||||||| 589f192
                 if (taEdit.getText().isEmpty())
                     wcount = lcount = 0;
+=======
+                }
+                
+>>>>>>> 7355c987aec9c0c6dbcce450058798d581ad2143
                 detailWords.setText(String.valueOf(taEdit.getText().split("\\s+").length));
                 detailLines.setText(String.valueOf(taEdit.getText().split("\n").length));
                 if (taEdit.getText().isEmpty()) {
@@ -114,14 +171,15 @@ public class HmiFXMLController implements Initializable {
                     detailWords.setText("0");
                     detailLines.setText("0");
                 }
-            }        
-        });    
-    
+            }
+        });
+        
         fontSlider.setValue(fontSize);
         fontSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-        taEdit.setStyle("-fx-font-size: " + newValue.intValue() + "px");
+
+            taEdit.setStyle("-fx-font-size: " + newValue.intValue() + "px");
         });
-    }
+    }    
     
     @FXML
     private void openFile(ActionEvent event) throws FileNotFoundException, IOException {
@@ -195,8 +253,94 @@ public class HmiFXMLController implements Initializable {
     @FXML
     private void closeEditor(ActionEvent event) {
         Stage stage = (Stage) details.getScene().getWindow();
+<<<<<<< HEAD
+||||||| c297c67
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> ValerioKapa-master
         if(isModified) closeOperation();
         else stage.close();
+<<<<<<< HEAD
+||||||| c297c67
+=======
+        if(!selectedFile.getName().equals(detailFileName.getText())){
+            Alert rusure = new Alert(AlertType.CONFIRMATION);
+            rusure.setContentText("Do you want to save all changes?");
+            
+            ButtonType btnSave = new ButtonType("Save");
+            ButtonType btnNoSave = new ButtonType("Dont Save");
+            ButtonType btnCancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
+            
+            rusure.getButtonTypes().setAll(btnSave, btnNoSave, btnCancel);
+            
+            Optional<ButtonType> opt = rusure.showAndWait();
+            if(opt.get() == btnSave) {
+                if (selectedFile != null) {
+                    saveTextToFile(selectedFile, taEdit.getText());
+                } else {
+                    FileChooser fc = createFileChooser("save");
+                    File savedFile = fc.showSaveDialog(stage);
+                    saveTextToFile(savedFile, taEdit.getText());
+                }
+            } 
+            if(opt.get() == btnNoSave) stage.close();
+        }
+>>>>>>> 589f19289f914b3e9cb1095e1fdfa963ed2b16f4
+=======
+=======
+        if(!selectedFile.getName().equals(detailFileName.getText())){
+            Alert rusure = new Alert(AlertType.CONFIRMATION);
+            rusure.setContentText("Do you want to save all changes?");
+            
+            ButtonType btnSave = new ButtonType("Save");
+            ButtonType btnNoSave = new ButtonType("Dont Save");
+            ButtonType btnCancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
+            
+            rusure.getButtonTypes().setAll(btnSave, btnNoSave, btnCancel);
+            
+            Optional<ButtonType> opt = rusure.showAndWait();
+            if(opt.get() == btnSave) {
+                if (selectedFile != null) {
+                    saveTextToFile(selectedFile, taEdit.getText());
+                } else {
+                    FileChooser fc = createFileChooser("save");
+                    File savedFile = fc.showSaveDialog(stage);
+                    saveTextToFile(savedFile, taEdit.getText());
+                }
+            } 
+            if(opt.get() == btnNoSave) stage.close();
+        }
+>>>>>>> 589f19289f914b3e9cb1095e1fdfa963ed2b16f4
+||||||| 589f192
+        if(!selectedFile.getName().equals(detailFileName.getText())){
+            Alert rusure = new Alert(AlertType.CONFIRMATION);
+            rusure.setContentText("Do you want to save all changes?");
+            
+            ButtonType btnSave = new ButtonType("Save");
+            ButtonType btnNoSave = new ButtonType("Dont Save");
+            ButtonType btnCancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
+            
+            rusure.getButtonTypes().setAll(btnSave, btnNoSave, btnCancel);
+            
+            Optional<ButtonType> opt = rusure.showAndWait();
+            if(opt.get() == btnSave) {
+                if (selectedFile != null) {
+                    saveTextToFile(selectedFile, taEdit.getText());
+                } else {
+                    FileChooser fc = createFileChooser("save");
+                    File savedFile = fc.showSaveDialog(stage);
+                    saveTextToFile(savedFile, taEdit.getText());
+                }
+            } 
+            if(opt.get() == btnNoSave) stage.close();
+        }
+=======
+        if(isModified) closeOperation();
+        else stage.close();
+>>>>>>> 7355c987aec9c0c6dbcce450058798d581ad2143
+>>>>>>> ValerioKapa-master
     }
     
     private FileChooser createFileChooser(String opt) {
@@ -240,6 +384,13 @@ public class HmiFXMLController implements Initializable {
         return format.format(date);
     }
     
+<<<<<<< HEAD
+||||||| c297c67
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> ValerioKapa-master
     private void closeOperation() {
         Stage stage = (Stage) details.getScene().getWindow();
         Alert rusure = new Alert(AlertType.CONFIRMATION);
@@ -261,7 +412,37 @@ public class HmiFXMLController implements Initializable {
         else if(opt.get() == btnNoSave && isModified) rusure.close();
         else stage.close();
     }
-
+<<<<<<< HEAD
+    
+||||||| c297c67
+=======
+=======
+=======
+||||||| 589f192
+=======
+    private void closeOperation() {
+        Stage stage = (Stage) details.getScene().getWindow();
+        Alert rusure = new Alert(AlertType.CONFIRMATION);
+        rusure.setContentText("Do you want to save the changes?");
+            
+        ButtonType btnSave = new ButtonType("Save");
+        ButtonType btnNoSave = new ButtonType("Dont Save");
+        ButtonType btnCancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
+            
+        rusure.getButtonTypes().setAll(btnSave, btnNoSave, btnCancel);
+            
+        Optional<ButtonType> opt = rusure.showAndWait();
+        if(opt.get() == btnSave &&  isNew) {
+            FileChooser fc = createFileChooser("save");
+            File savedFile = fc.showSaveDialog(stage);
+            saveTextToFile(savedFile);
+        }
+        else if (opt.get() == btnSave) saveTextToFile(selectedFile);
+        else if(opt.get() == btnNoSave && isModified) rusure.close();
+        else stage.close();
+    }
+>>>>>>> 7355c987aec9c0c6dbcce450058798d581ad2143
+>>>>>>> ValerioKapa-master
     @FXML
     private void pdfExport(ActionEvent event) throws Exception{
         
@@ -309,6 +490,20 @@ public class HmiFXMLController implements Initializable {
                 Logger.getLogger(HmiFXMLController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+<<<<<<< HEAD
+    }
+||||||| c297c67
+        
+    }  
+>>>>>>> 589f19289f914b3e9cb1095e1fdfa963ed2b16f4
+=======
+        
+<<<<<<< HEAD
+    }  
+>>>>>>> 589f19289f914b3e9cb1095e1fdfa963ed2b16f4
+||||||| 589f192
+    }  
+=======
     }
     
     @FXML
@@ -359,5 +554,7 @@ public class HmiFXMLController implements Initializable {
     private void selectEnd(ActionEvent event){
         taEdit.requestFocus(); 
         taEdit.selectRange(caretPossitionA, taEdit.getCaretPosition());    
-    }
+    }    
+>>>>>>> 7355c987aec9c0c6dbcce450058798d581ad2143
+>>>>>>> ValerioKapa-master
 }
