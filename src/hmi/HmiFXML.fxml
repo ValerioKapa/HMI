@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.text.*?>
-<?import java.lang.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.RadioMenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hmi.HmiFXMLController">
 <children>
@@ -22,8 +24,11 @@
           <Menu mnemonicParsing="false" text="File">
             <items>
                   <MenuItem fx:id="open" mnemonicParsing="false" onAction="#openFile" text="Open" />
+                  <MenuItem fx:id="menuNew" mnemonicParsing="false" onAction="#newFile" text="New" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem fx:id="save" mnemonicParsing="false" onAction="#saveFile" text="Save" />
                   <MenuItem fx:id="saveAs" mnemonicParsing="false" onAction="#saveFileAs" text="Save As" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
               <MenuItem fx:id="close" mnemonicParsing="false" onAction="#closeEditor" text="Close" />
             </items>
           </Menu>
@@ -31,6 +36,7 @@
             <items>
                   <MenuItem mnemonicParsing="false" text="Undo" />
                   <MenuItem mnemonicParsing="false" text="Redo" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" text="Copy" />
                   <MenuItem mnemonicParsing="false" text="Cut" />
                   <MenuItem mnemonicParsing="false" text="Paste" />
@@ -66,12 +72,19 @@
                   <Label fx:id="detailFileName" alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="New File" />
                </items>
             </SplitPane>
-            <SplitPane fx:id="wordsLines" dividerPositions="0.5" focusTraversable="false" prefHeight="22.0" prefWidth="204.0" HBox.hgrow="ALWAYS">
-               <items>
+            <GridPane>
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
                   <Label fx:id="detailWords" alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="0" />
-                  <Label fx:id="detailLines" alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="0" />
-               </items>
-            </SplitPane>
+                  <Label fx:id="detailLines" alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="0" GridPane.columnIndex="1" />
+               </children>
+            </GridPane>
             <SplitPane fx:id="lastSaved" prefHeight="23.0" prefWidth="195.0" HBox.hgrow="ALWAYS">
                <items>
                   <Label fx:id="detailLastSaved" alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Last Saved" />

@@ -59,6 +59,23 @@
     -fx-focus-color: #FFFFFF;
 }
 
+.scroll-pane .scroll-bar:horizontal {
+    -fx-pref-height: 15 ;
+}
+.scroll-pane .scroll-bar:vertical {
+    -fx-pref-width: 15 ;
+}
+
+ .scroll-bar .increment-arrow,
+ .scroll-bar .decrement-arrow{
+    -fx-shape : " ";    
+}
+
+ .scroll-bar:vertical .increment-arrow,
+ .scroll-bar:vertical .decrement-arrow{
+    -fx-shape : " ";    
+}
+
 /*genika colors*/
 .primary-color{
 }

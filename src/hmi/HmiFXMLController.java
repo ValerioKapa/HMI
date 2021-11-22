@@ -55,18 +55,18 @@ public class HmiFXMLController implements Initializable {
     private boolean isModified = false;
     private int wcount = 0;
     private int lcount = 0;
-    private int fontSize = 18;
+    private final int fontSize = 18;
     
     @FXML
     private HBox details;
     @FXML
     private SplitPane fileName;
     @FXML
-    private SplitPane wordsLines;
-    @FXML
     private SplitPane lastSaved;
     @FXML
     private MenuItem open;
+    @FXML
+    private MenuItem menuNew;
     @FXML
     private MenuItem save;
     @FXML
@@ -111,6 +111,7 @@ public class HmiFXMLController implements Initializable {
             }
         });
         
+        fontSlider.setValue(fontSize);
         fontSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
 
             taEdit.setStyle("-fx-font-size: " + newValue.intValue() + "px");
@@ -138,25 +139,23 @@ public class HmiFXMLController implements Initializable {
                 
                 isModified = false;
         }
-            /*BufferedReader bfr = new BufferedReader(new FileReader(selectedFile));
-            String line;
-            while ((line = bfr.readLine()) != null) {
-                taEdit.appendText(line);
-                if (!(bfr.readLine() == null)) //We need to fix this prompt!
-                    taEdit.appendText("\n");
-                String words[] = line.split("\\s+");
-                wcount += words.length;
-                lcount++;
-                
-                isModified = false;
-            }*/
             detailFileName.setText(selectedFile.getName());
             detailLastSaved.setText(convertTime(selectedFile.lastModified()));
             detailWords.setText(String.valueOf(wcount));
             detailLines.setText(String.valueOf(lcount));
-        } catch(Exception e) {
+        } catch(FileNotFoundException e) {
             System.out.println("The User didnt selected any file : " + e.toString());
         }
+    }
+    
+    @FXML
+    private void newFile(ActionEvent event) {
+        if (isModified) closeOperation();
+        isNew = true;
+        isModified = false;
+        if (!detailFileName.getText().equals("New File"))
+            selectedFile = new File(System.getProperty("user.home") + System.lineSeparator() + "New File");
+        detailFileName.setText(selectedFile.getName());
     }
 
     @FXML
@@ -224,7 +223,7 @@ public class HmiFXMLController implements Initializable {
             writer.close();
             detailFileName.setText(file.getName());
             detailLastSaved.setText(convertTime(f.lastModified()));
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.println(e.toString());
         }
         isModified = isNew = false;
@@ -232,7 +231,7 @@ public class HmiFXMLController implements Initializable {
     
     private String convertTime(long time) {
         Date date = new Date(time);
-        Format format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        Format format = new SimpleDateFormat("yyyy/MM/dd HH:mm");
         return format.format(date);
     }
     
