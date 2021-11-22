@@ -20,38 +20,38 @@
 }
 
 .button:hover{
-    -fx-background-color: #F7CA88;
+    /*-fx-background-color: #F7CA88;*/
 }
 
 /*olo to menu bar*/
 .menu-bar {
     -fx-background-color: #FFFFFF;
-    -fx-focused-text-base-color: black;
+    /*-fx-focused-text-base-color: black;*/
 
 }
 /*koubia pano sto menu*/
 .menu-button:hover {
-     -fx-background-color: #FFE0B6;
-     -fx-text-background-color: black;
+     -fx-background-color: #0076CE;
+     /*-fx-focused-text-base-color: black;*/
 }
 
 .menu-button:focused {
-     -fx-background-color: #F7CA88;
-     -fx-text-background-color: black;
+     -fx-background-color: #0076CE;
+     /*-fx-focused-text-base-color: black;*/
 }
 
 .menu-button:showing {
-     -fx-background-color: #F7CA88;
-     -fx-text-background-color: black;
+     -fx-background-color: #0076CE;
+     /*-fx-focused-text-base-color: black;*/
 }
 
 /*h lista pou vgenei otan patas ena koubi sto menu*/
 .menu-item:hover {
-     -fx-background-color: #F7CA88;
+     -fx-background-color: #0076CE;
 }
 
 .menu-item:focused {
-     -fx-background-color: #F7CA88;
+     -fx-background-color: #0076CE;
 }
 
 .text-area:focused{
@@ -59,6 +59,7 @@
     -fx-focus-color: #FFFFFF;
 }
 
+<<<<<<< HEAD
 .scroll-pane .scroll-bar:horizontal {
     -fx-pref-height: 15 ;
 }
@@ -76,6 +77,27 @@
     -fx-shape : " ";    
 }
 
+||||||| c297c67
+=======
+.scroll-pane .scroll-bar:horizontal {
+    -fx-pref-height: 15 ;
+}
+
+.scroll-pane .scroll-bar:vertical {
+    -fx-pref-width: 15 ;
+}
+
+ .scroll-bar .increment-arrow,
+ .scroll-bar .decrement-arrow{
+    -fx-shape : " ";    
+}
+
+ .scroll-bar:vertical .increment-arrow,
+ .scroll-bar:vertical .decrement-arrow{
+    -fx-shape : " ";    
+}
+
+>>>>>>> ValerioKapa-master
 /*genika colors*/
 .primary-color{
 }
