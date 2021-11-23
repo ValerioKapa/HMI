@@ -28,6 +28,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
@@ -35,21 +36,27 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import javax.swing.undo.UndoManager;
 
 public class HmiFXMLController implements Initializable {
     
@@ -59,7 +66,9 @@ public class HmiFXMLController implements Initializable {
     private int wcount = 0;
     private int lcount = 0;
     private int caretPossitionA;
-    private final int fontSize = 18;
+    private int fontSize = 18;
+    private UndoManager um = new UndoManager();
+    private String copiedText = "";
     
     @FXML
     private HBox details;
@@ -95,6 +104,18 @@ public class HmiFXMLController implements Initializable {
     private ToggleGroup themeToggleGroup;
     @FXML
     private RadioMenuItem darkThemeButton;
+    @FXML
+    private MenuItem undo;
+    @FXML
+    private MenuItem redo;
+    @FXML
+    private MenuItem copy;
+    @FXML
+    private MenuItem cut;
+    @FXML
+    private MenuItem paste;
+    @FXML
+    private MenuItem toPDF;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -115,18 +136,129 @@ public class HmiFXMLController implements Initializable {
                     detailLines.setText("0");
                 }
             }        
-        });    
+        });
     
         fontSlider.setValue(fontSize);
         fontSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
         taEdit.setStyle("-fx-font-size: " + newValue.intValue() + "px");
+        });
+        
+        ContextMenu cm = new ContextMenu();
+        
+        MenuItem startSelect = new MenuItem("Start Selection");
+        startSelect.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent t) {
+                taEdit.requestFocus(); 
+                caretPossitionA = taEdit.getCaretPosition();    
+            }
+        
+    });
+        MenuItem endSelect = new MenuItem("End Selection");
+        endSelect.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent t) {
+                taEdit.requestFocus(); 
+                taEdit.selectRange(caretPossitionA, taEdit.getCaretPosition());
+            }
+            
+        });
+        MenuItem allSelect = new MenuItem("Select All");
+        allSelect.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent t) {
+                taEdit.selectAll();
+            }
+        
+    });
+        MenuItem cmUndo = new MenuItem("Undo");
+        allSelect.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent t) {
+                undo();
+            }
+        
+    });
+        MenuItem cmRedo = new MenuItem("Redo");
+        allSelect.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent t) {
+                redo();
+            }
+        
+    });
+        MenuItem cmCut = new MenuItem("Cut");
+        allSelect.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent t) {
+                cut();
+            }
+        
+    });
+        MenuItem cmCopy = new MenuItem("Copy");
+        allSelect.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent t) {
+                copy();
+            }
+        
+    });
+        MenuItem cmPaste = new MenuItem("Paste");
+        allSelect.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent t) {
+                paste();
+            }
+        
+    });
+        
+        cm.getItems().add(cmUndo);
+        cm.getItems().add(cmRedo);
+        cm.getItems().add(new SeparatorMenuItem());
+        cm.getItems().add(cmCut);
+        cm.getItems().add(cmCopy);
+        cm.getItems().add(cmPaste);
+        cm.getItems().add(new SeparatorMenuItem());
+        cm.getItems().add(startSelect);
+        cm.getItems().add(endSelect);
+        cm.getItems().add(allSelect);
+        
+        taEdit.setContextMenu(cm);
+        
+        // Accelerators
+        open.setAccelerator(KeyCombination.keyCombination("Ctrl+O"));
+        menuNew.setAccelerator(KeyCombination.keyCombination("Ctrl+N"));
+        save.setAccelerator(KeyCombination.keyCombination("Ctrl+S"));
+        saveAs.setAccelerator(KeyCombination.keyCombination("Ctrl+Shift+S"));
+        close.setAccelerator(KeyCombination.keyCombination("Ctrl+W"));
+        undo.setAccelerator(KeyCombination.keyCombination("Ctrl+Z"));
+        redo.setAccelerator(KeyCombination.keyCombination("Ctrl+Y"));
+        copy.setAccelerator(KeyCombination.keyCombination("Ctrl+C"));
+        cut.setAccelerator(KeyCombination.keyCombination("Ctrl+X"));
+        paste.setAccelerator(KeyCombination.keyCombination("Ctrl+P"));
+        toPDF.setAccelerator(KeyCombination.keyCombination("Ctrl+Shift+P"));
+        fontSlider.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent t) {
+                if (t.isControlDown() && t.getCode() == KeyCode.COMMA) {
+                    fontSlider.requestFocus();
+                    fontSize++;
+                    fontSlider.setValue(fontSize);
+                }
+                if (t.isControlDown() && t.getCode() == KeyCode.PERIOD) {
+                    fontSlider.requestFocus();
+                    fontSize--;
+                    fontSlider.setValue(fontSize);
+                }
+            }
+            
         });
     }
     
     @FXML
     private void openFile(ActionEvent event) throws FileNotFoundException, IOException {
         isNew = false;
-        if (isModified) closeOperation();
+        if (isModified) closeOperation("");
         Window stage = details.getScene().getWindow();
         FileChooser fc = createFileChooser("open");
         try {
@@ -148,14 +280,14 @@ public class HmiFXMLController implements Initializable {
             detailLastSaved.setText(convertTime(selectedFile.lastModified()));
             detailWords.setText(String.valueOf(wcount));
             detailLines.setText(String.valueOf(lcount));
-        } catch(FileNotFoundException e) {
+        } catch(Exception e) {
             System.out.println("The User didnt selected any file : " + e.toString());
         }
     }
     
     @FXML
     private void newFile(ActionEvent event) {
-        if (isModified) closeOperation();
+        if (isModified) closeOperation("");
         isNew = true;
         isModified = false;
         if (!detailFileName.getText().equals("New File"))
@@ -195,7 +327,7 @@ public class HmiFXMLController implements Initializable {
     @FXML
     private void closeEditor(ActionEvent event) {
         Stage stage = (Stage) details.getScene().getWindow();
-        if(isModified) closeOperation();
+        if(isModified) closeOperation("exit");
         else stage.close();
     }
     
@@ -240,7 +372,7 @@ public class HmiFXMLController implements Initializable {
         return format.format(date);
     }
     
-    private void closeOperation() {
+    private void closeOperation(String msg) {
         Stage stage = (Stage) details.getScene().getWindow();
         Alert rusure = new Alert(AlertType.CONFIRMATION);
         rusure.setContentText("Do you want to save the changes?");
@@ -258,8 +390,11 @@ public class HmiFXMLController implements Initializable {
             saveTextToFile(savedFile);
         }
         else if (opt.get() == btnSave) saveTextToFile(selectedFile);
-        else if(opt.get() == btnNoSave && isModified) rusure.close();
-        else stage.close();
+        else if (opt.get() == btnNoSave && isModified) {
+            rusure.close();
+            selectedFile = null;
+        }
+        if (selectedFile == null && msg.equals("exit")) stage.close();
     }
 
     @FXML
@@ -348,16 +483,52 @@ public class HmiFXMLController implements Initializable {
         
 	newWindow.show();        
     }
-    
-    @FXML 
-    private void selectBeggin(ActionEvent event){
-        taEdit.requestFocus(); 
-        caretPossitionA = taEdit.getCaretPosition();    
+
+    @FXML
+    private void undoEdit(ActionEvent event) {
+        taEdit.undo();
     }
 
-    @FXML 
-    private void selectEnd(ActionEvent event){
-        taEdit.requestFocus(); 
-        taEdit.selectRange(caretPossitionA, taEdit.getCaretPosition());    
+    @FXML
+    private void redoEdit(ActionEvent event) {
+        taEdit.redo();
+    }
+
+    @FXML
+    private void copyEdit(ActionEvent event) {
+        copy();
+    }
+
+    @FXML
+    private void cutEdit(ActionEvent event) {
+        cut();
+    }
+
+    @FXML
+    private void pasteEdit(ActionEvent event) {
+        paste();
+    }
+    
+    private void undo() {
+        um.undo();
+    }
+    
+    private void redo() {
+        um.redo();
+    }
+    
+    private void copy() {
+        copiedText = "";
+        copiedText = taEdit.getSelectedText();
+    }
+    
+    private void cut() {
+        copiedText = "";
+        copiedText = taEdit.getSelectedText();
+        taEdit.setText(taEdit.getText().replace(taEdit.getSelectedText(),"")); // taEdit.replaceSelection("");
+    }
+    
+    private void paste() {
+        taEdit.insertText(taEdit.getCaretPosition(), copiedText);
     }
 }

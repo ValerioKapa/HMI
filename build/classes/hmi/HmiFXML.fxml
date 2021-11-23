@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hmi.HmiFXMLController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hmi.HmiFXMLController">
 <children>
        <MenuBar maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="27.97" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <menus>
@@ -34,18 +34,17 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
             <items>
-                  <MenuItem mnemonicParsing="false" text="Undo" />
-                  <MenuItem mnemonicParsing="false" text="Redo" />
+                  <MenuItem fx:id="undo" mnemonicParsing="false" onAction="#undoEdit" text="Undo" />
+                  <MenuItem fx:id="redo" mnemonicParsing="false" onAction="#redoEdit" text="Redo" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Copy" />
-                  <MenuItem mnemonicParsing="false" text="Cut" />
-                  <MenuItem mnemonicParsing="false" text="Paste" />
-              <MenuItem mnemonicParsing="false" text="Delete" />
+                  <MenuItem fx:id="copy" mnemonicParsing="false" onAction="#copyEdit" text="Copy" />
+                  <MenuItem fx:id="cut" mnemonicParsing="false" onAction="#cutEdit" text="Cut" />
+                  <MenuItem fx:id="paste" mnemonicParsing="false" onAction="#pasteEdit" text="Paste" />
             </items>
           </Menu>
             <Menu mnemonicParsing="false" text="Print">
               <items>
-                  <MenuItem mnemonicParsing="false" onAction="#pdfExport" text="Export to PDF" />
+                  <MenuItem fx:id="toPDF" mnemonicParsing="false" onAction="#pdfExport" text="Export to PDF" />
               </items>
             </Menu>
           <Menu mnemonicParsing="false" text="More">
@@ -58,8 +57,6 @@
                   <RadioMenuItem fx:id="darkThemeButton" mnemonicParsing="false" text="Dark Theme" toggleGroup="$themeToggleGroup" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#aboutWindow" text="About" />
-                  <MenuItem mnemonicParsing="false" onAction="#selectBeggin" text="Select Beggin" />
-                  <MenuItem mnemonicParsing="false" onAction="#selectEnd" text="Select End" />
             </items>
           </Menu>
             <Menu mnemonicParsing="false" text="Font Size">
