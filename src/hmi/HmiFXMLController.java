@@ -67,7 +67,6 @@ public class HmiFXMLController implements Initializable {
     private int lcount = 0;
     private int caretPossitionA;
     private int fontSize = 18;
-    private UndoManager um = new UndoManager();
     private String copiedText = "";
     
     @FXML
@@ -119,6 +118,7 @@ public class HmiFXMLController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        taEdit.setWrapText(true);
         taEdit.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> ov, String t, String t1) {
@@ -172,23 +172,23 @@ public class HmiFXMLController implements Initializable {
         
     });
         MenuItem cmUndo = new MenuItem("Undo");
-        allSelect.setOnAction(new EventHandler<ActionEvent>() {
+        cmUndo.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent t) {
-                undo();
+                taEdit.undo();
             }
         
     });
         MenuItem cmRedo = new MenuItem("Redo");
-        allSelect.setOnAction(new EventHandler<ActionEvent>() {
+        cmRedo.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent t) {
-                redo();
+                taEdit.redo();
             }
         
     });
         MenuItem cmCut = new MenuItem("Cut");
-        allSelect.setOnAction(new EventHandler<ActionEvent>() {
+        cmCut.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent t) {
                 cut();
@@ -196,7 +196,7 @@ public class HmiFXMLController implements Initializable {
         
     });
         MenuItem cmCopy = new MenuItem("Copy");
-        allSelect.setOnAction(new EventHandler<ActionEvent>() {
+        cmCopy.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent t) {
                 copy();
@@ -204,7 +204,7 @@ public class HmiFXMLController implements Initializable {
         
     });
         MenuItem cmPaste = new MenuItem("Paste");
-        allSelect.setOnAction(new EventHandler<ActionEvent>() {
+        cmPaste.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent t) {
                 paste();
@@ -237,16 +237,15 @@ public class HmiFXMLController implements Initializable {
         cut.setAccelerator(KeyCombination.keyCombination("Ctrl+X"));
         paste.setAccelerator(KeyCombination.keyCombination("Ctrl+P"));
         toPDF.setAccelerator(KeyCombination.keyCombination("Ctrl+Shift+P"));
-        fontSlider.setOnKeyPressed(new EventHandler<KeyEvent>() {
+        
+        taEdit.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent t) {
                 if (t.isControlDown() && t.getCode() == KeyCode.COMMA) {
-                    fontSlider.requestFocus();
                     fontSize++;
                     fontSlider.setValue(fontSize);
                 }
                 if (t.isControlDown() && t.getCode() == KeyCode.PERIOD) {
-                    fontSlider.requestFocus();
                     fontSize--;
                     fontSlider.setValue(fontSize);
                 }
@@ -507,14 +506,6 @@ public class HmiFXMLController implements Initializable {
     @FXML
     private void pasteEdit(ActionEvent event) {
         paste();
-    }
-    
-    private void undo() {
-        um.undo();
-    }
-    
-    private void redo() {
-        um.redo();
     }
     
     private void copy() {
