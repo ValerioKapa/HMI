@@ -1,32 +1,77 @@
-.mainFxmlClass {
-    -fx-background-radius: 0;
+/*Text Color Fill Menu - Label*/
+.menu .label {
+    -fx-text-fill: #EFEFE1;
 }
 
-.button{
-
+/*Buttons in Menu Bar Control*/
+.menu-button:hover {
+     -fx-background-color: #0076CE;
 }
 
-.button:hover{
-    -fx-background-color: #6F6F89;
+.menu-button:focused {
+     -fx-background-color: #0076CE;
 }
 
+.menu-button:showing {
+     -fx-background-color: #0076CE;
+}
+
+/*Pop-up List in Menu Bar Control*/
+.menu-item:hover {
+     -fx-background-color: #0076CE;
+}
+
+.menu-item:focused {
+     -fx-background-color: #0076CE;
+}
+
+/*Text Area Control*/
+.text-area:focused{
+    -fx-faint-focus-color: transparent;
+    -fx-focus-color: #545454;
+}
+
+/*Scroll Bar Control*/
+.scroll-pane .scroll-bar:horizontal {
+    -fx-pref-height: 15 ;
+}
+
+.scroll-pane .scroll-bar:vertical {
+    -fx-pref-width: 15 ;
+}
+
+ .scroll-bar .increment-arrow,
+ .scroll-bar .decrement-arrow{
+    -fx-shape : " ";    
+}
+
+ .scroll-bar:vertical .increment-arrow,
+ .scroll-bar:vertical .decrement-arrow{
+    -fx-shape : " ";    
+}
+
+/*General Color Control*/
 .primary-color{
-    -fx-background-color: #303030;
-    
-    -fx-control-inner-background: #303030;
-    -fx-text-box-border: #303030;
+    -fx-background-color: #202020;
+    -fx-control-inner-background: #333333;
+    -fx-text-box-border: #202020;
 }
 
 .secondary-color{
-    -fx-control-inner-background: #3F3F3F;
-    -fx-text-box-border: #303030;
+    -fx-control-inner-background: #333333;
+    -fx-text-box-border: #121212;
 }
 
-.menu .label
-{
-    -fx-text-fill: #DFDFBF;
+.footer-color{
+    -fx-background-color: #202020;
+    -fx-border-color: #202020;
+    -fx-text-fill: #EFEFE1;
 }
 
 .text-color{
-    -fx-text-fill: #DFDFBF;
+    -fx-text-fill: #EFEFE1;
+}
+/*Slider Color Control*/
+.slider .track {
+    -fx-background-color: #333333;
 }

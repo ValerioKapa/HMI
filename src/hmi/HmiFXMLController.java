@@ -50,13 +50,15 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import javax.swing.undo.UndoManager;
 
 public class HmiFXMLController implements Initializable {
     
@@ -98,12 +100,6 @@ public class HmiFXMLController implements Initializable {
     @FXML
     private Slider fontSlider;
     @FXML
-    private RadioMenuItem lightThemeButton;
-    @FXML
-    private ToggleGroup themeToggleGroup;
-    @FXML
-    private RadioMenuItem darkThemeButton;
-    @FXML
     private MenuItem undo;
     @FXML
     private MenuItem redo;
@@ -115,9 +111,10 @@ public class HmiFXMLController implements Initializable {
     private MenuItem paste;
     @FXML
     private MenuItem toPDF;
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        
         taEdit.setWrapText(true);
         taEdit.textProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -140,7 +137,7 @@ public class HmiFXMLController implements Initializable {
     
         fontSlider.setValue(fontSize);
         fontSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-        taEdit.setStyle("-fx-font-size: " + newValue.intValue() + "px");
+            taEdit.setStyle("-fx-font-size: " + newValue.intValue() + "px");
         });
         
         ContextMenu cm = new ContextMenu();
@@ -153,7 +150,8 @@ public class HmiFXMLController implements Initializable {
                 caretPossitionA = taEdit.getCaretPosition();    
             }
         
-    });
+        });
+        
         MenuItem endSelect = new MenuItem("End Selection");
         endSelect.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -163,6 +161,7 @@ public class HmiFXMLController implements Initializable {
             }
             
         });
+        
         MenuItem allSelect = new MenuItem("Select All");
         allSelect.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -170,7 +169,8 @@ public class HmiFXMLController implements Initializable {
                 taEdit.selectAll();
             }
         
-    });
+        });
+        
         MenuItem cmUndo = new MenuItem("Undo");
         cmUndo.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -178,7 +178,8 @@ public class HmiFXMLController implements Initializable {
                 taEdit.undo();
             }
         
-    });
+        });
+        
         MenuItem cmRedo = new MenuItem("Redo");
         cmRedo.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -186,7 +187,8 @@ public class HmiFXMLController implements Initializable {
                 taEdit.redo();
             }
         
-    });
+        });
+        
         MenuItem cmCut = new MenuItem("Cut");
         cmCut.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -194,7 +196,8 @@ public class HmiFXMLController implements Initializable {
                 cut();
             }
         
-    });
+        });
+       
         MenuItem cmCopy = new MenuItem("Copy");
         cmCopy.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -202,7 +205,8 @@ public class HmiFXMLController implements Initializable {
                 copy();
             }
         
-    });
+        });
+        
         MenuItem cmPaste = new MenuItem("Paste");
         cmPaste.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -210,7 +214,7 @@ public class HmiFXMLController implements Initializable {
                 paste();
             }
         
-    });
+        });
         
         cm.getItems().add(cmUndo);
         cm.getItems().add(cmRedo);
@@ -450,30 +454,40 @@ public class HmiFXMLController implements Initializable {
         
         Window stage = details.getScene().getWindow();
         
-        Pane secondaryLayout = new Pane();
+        Pane aboutPane = new Pane();
         
-        Label secondLabel = new Label("Οικοδομήθηκε απο:"
-                + "\nΒαλέριο Κιόσε"
-                + "\nΔημήτρη Ρούμπο");
-	secondaryLayout.getChildren().add(secondLabel);
+        TextFlow flow = new TextFlow();
 
-        Image image1 = new Image(getClass().getResourceAsStream("/Images/blue_frog_big.png"));
+        Text text1=new Text("Δημιουργήθηκε από τους:");
+        text1.setStyle("-fx-font-weight: bold");
+        text1.setTranslateY(100);
+        text1.setTranslateX(30);
+        
+        Text text2=new Text("\n\nΚιόσε Βαλέριο \nΡούμπος Δημήτρης \nΚάτω από την επιμέλεια του Μαρτσέλο");
+        text2.setTranslateY(100);//pano kato
+        text2.setTranslateX(40);//mesa ekso
+         
+        Label aboutLabel = new Label("JavaFX 17 - CSS - PDFjet");
+        aboutLabel.setTranslateY(260);
+        aboutLabel.setTranslateX(30);
+	aboutPane.getChildren().add(aboutLabel);
+        
+        flow.getChildren().addAll(text1, text2);   
+        aboutPane.getChildren().add(flow);
+       
+        Image image1 = new Image(getClass().getResourceAsStream("/Images/notepad--.png"));
         ImageView imageView = new ImageView(image1);
-        imageView.setX(200);
-        imageView.setY(70);
-        imageView.setFitHeight(300); 
-        imageView.setFitWidth(300);
-        secondaryLayout.getChildren().add(imageView);       
+        aboutPane.getChildren().add(imageView);       
         
-	Scene secondScene = new Scene(secondaryLayout, 500, 300);
+	Scene secondScene = new Scene(aboutPane, 500, 300);
 
-	// New window (Stage)
+	//New window (Stage)
 	Stage newWindow = new Stage();
         newWindow.setResizable(false);
-	newWindow.setTitle("About");
+	newWindow.setTitle("About Notepad--");
 	newWindow.setScene(secondScene);
 
-	// Set position of second window, related to primary window.
+	//Set position of second window, related to primary window.
 	newWindow.setX(stage.getX() + 200);
 	newWindow.setY(stage.getY() + 100);
         
@@ -522,4 +536,17 @@ public class HmiFXMLController implements Initializable {
     private void paste() {
         taEdit.insertText(taEdit.getCaretPosition(), copiedText);
     }
+    
+    @FXML
+    private void lightTheme(ActionEvent event){
+        HMI.stage.getScene().getStylesheets().clear();
+        HMI.stage.getScene().setUserAgentStylesheet(null);
+        HMI.stage.getScene().getStylesheets().add(getClass().getResource("/Styles/LightTheme.css").toExternalForm());
+    }
+    @FXML
+    private void darkTheme(ActionEvent event){
+        HMI.stage.getScene().getStylesheets().clear();
+        HMI.stage.getScene().setUserAgentStylesheet(null);
+        HMI.stage.getScene().getStylesheets().add(getClass().getResource("/Styles/DarkTheme.css").toExternalForm());
+    }    
 }

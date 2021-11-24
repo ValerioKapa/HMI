@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
@@ -17,9 +21,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hmi.HmiFXMLController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hmi.HmiFXMLController">
 <children>
-       <MenuBar maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="27.97" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+       <MenuBar maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="27.97" styleClass="primary-color" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
@@ -42,19 +46,19 @@
                   <MenuItem fx:id="paste" mnemonicParsing="false" onAction="#pasteEdit" text="Paste" />
             </items>
           </Menu>
-            <Menu mnemonicParsing="false" text="Print">
+            <Menu mnemonicParsing="false" text="Export">
               <items>
                   <MenuItem fx:id="toPDF" mnemonicParsing="false" onAction="#pdfExport" text="Export to PDF" />
               </items>
             </Menu>
           <Menu mnemonicParsing="false" text="More">
             <items>
-                  <RadioMenuItem fx:id="lightThemeButton" mnemonicParsing="false" text="Light Theme">
+                  <RadioMenuItem fx:id="lightThemeButton" mnemonicParsing="false" onAction="#lightTheme" text="Light Theme">
                      <toggleGroup>
                         <ToggleGroup fx:id="themeToggleGroup" />
                      </toggleGroup>
                   </RadioMenuItem>
-                  <RadioMenuItem fx:id="darkThemeButton" mnemonicParsing="false" text="Dark Theme" toggleGroup="$themeToggleGroup" />
+                  <RadioMenuItem fx:id="darkThemeButton" mnemonicParsing="false" onAction="#darkTheme" text="Dark Theme" toggleGroup="$themeToggleGroup" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#aboutWindow" text="About" />
             </items>
@@ -66,14 +70,14 @@
             </Menu>
         </menus>
       </MenuBar>
-      <HBox fx:id="details" alignment="CENTER" fillHeight="false" layoutY="384.0" maxHeight="20.0" maxWidth="1.7976931348623157E308" minHeight="20.0" prefHeight="20.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+      <HBox fx:id="details" alignment="CENTER" fillHeight="false" layoutY="384.0" maxHeight="20.0" maxWidth="1.7976931348623157E308" minHeight="20.0" prefHeight="20.0" prefWidth="600.0" styleClass="footer-color" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
-            <SplitPane fx:id="fileName" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="21.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+            <SplitPane fx:id="fileName" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="21.0" prefWidth="200.0" styleClass="footer-color" HBox.hgrow="ALWAYS">
                <items>
-                  <Label fx:id="detailFileName" alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="New File" />
+                  <Label fx:id="detailFileName" alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="footer-color" text="New File" />
                </items>
             </SplitPane>
-            <GridPane>
+            <GridPane styleClass="footer-color">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -82,18 +86,18 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label fx:id="detailWords" alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="0" />
-                  <Label fx:id="detailLines" alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="0" GridPane.columnIndex="1" />
+                  <Label fx:id="detailWords" alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="footer-color" text="0" />
+                  <Label fx:id="detailLines" alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="footer-color" text="0" GridPane.columnIndex="1" />
                </children>
             </GridPane>
-            <SplitPane fx:id="lastSaved" prefHeight="23.0" prefWidth="195.0" HBox.hgrow="ALWAYS">
+            <SplitPane fx:id="lastSaved" prefHeight="23.0" prefWidth="195.0" styleClass="footer-color" HBox.hgrow="ALWAYS">
                <items>
-                  <Label fx:id="detailLastSaved" alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Last Saved" />
+                  <Label fx:id="detailLastSaved" alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="footer-color" text="Last Saved" />
                </items>
             </SplitPane>
          </children>
       </HBox>
-      <TextArea fx:id="taEdit" layoutY="28.0" maxHeight="1.7976931348623157E308" minHeight="-Infinity" prefHeight="350.0" prefWidth="600.0" wrapText="true" AnchorPane.bottomAnchor="21.345988661271406" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="28.0">
+      <TextArea fx:id="taEdit" layoutY="28.0" maxHeight="1.7976931348623157E308" minHeight="-Infinity" prefHeight="350.0" prefWidth="600.0" styleClass="secondary-color" wrapText="true" AnchorPane.bottomAnchor="21.345988661271406" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="28.0">
          <font>
             <Font size="18.0" />
          </font></TextArea>

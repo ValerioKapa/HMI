@@ -1,51 +1,29 @@
-.root {
-    /* A bright blue for highlighting/accenting objects.  For example: selected
-     * text; selected items in menus, lists, trees, and tables; progress bars;
-     * default buttons.
-     
-    -fx-accent: #F7CA88;
-    
-    A bright blue for the focus indicator of objects. Typically used as the
-     * first color in -fx-background-color for the "focused" pseudo-class. Also
-     * typically used with insets of -1.4 to provide a glowing effect.
-     *
-     * TODO: should this be derived from -fx-accent?
-     
-    -fx-focus-color: #9a32a6;
-    */
+.slider .track {
+    -fx-background-color: #DBDBDB;
 }
 
-.mainFxmlClass {
-    -fx-background-radius: 0;
-}
-
-.button:hover{
-    /*-fx-background-color: #F7CA88;*/
-}
-
-/*olo to menu bar*/
+/*Whole Menu Bar Control*/
 .menu-bar {
     -fx-background-color: #FFFFFF;
-    /*-fx-focused-text-base-color: black;*/
-
 }
-/*koubia pano sto menu*/
+/*Text Color Fill Menu - Label*/
+.menu .label {
+}
+
+/*Buttons in Menu Bar Control*/
 .menu-button:hover {
      -fx-background-color: #0076CE;
-     /*-fx-focused-text-base-color: black;*/
 }
 
 .menu-button:focused {
      -fx-background-color: #0076CE;
-     /*-fx-focused-text-base-color: black;*/
 }
 
 .menu-button:showing {
      -fx-background-color: #0076CE;
-     /*-fx-focused-text-base-color: black;*/
 }
 
-/*h lista pou vgenei otan patas ena koubi sto menu*/
+/*Pop-up List in Menu Bar Control*/
 .menu-item:hover {
      -fx-background-color: #0076CE;
 }
@@ -54,14 +32,17 @@
      -fx-background-color: #0076CE;
 }
 
+/*Text Area Control*/
 .text-area:focused{
     -fx-faint-focus-color: transparent;
-    -fx-focus-color: #FFFFFF;
+    -fx-focus-color: #6B6B6B;
 }
 
+/*Scroll Bar Control*/
 .scroll-pane .scroll-bar:horizontal {
     -fx-pref-height: 15 ;
 }
+
 .scroll-pane .scroll-bar:vertical {
     -fx-pref-width: 15 ;
 }
@@ -76,9 +57,16 @@
     -fx-shape : " ";    
 }
 
-/*genika colors*/
+/*General Color Control*/
 .primary-color{
 }
 
 .secondary-color{
+}
+
+.footer-color{
+    -fx-background-color: #FFFFFF;
+}
+
+.text-color{
 }

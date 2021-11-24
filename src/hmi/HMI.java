@@ -9,16 +9,20 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 public class HMI extends Application {
-
+    public static Stage stage;
+    
     @Override
     public void start(Stage primaryStage) throws Exception{
+        stage = primaryStage;
+        
         Parent root = FXMLLoader.load(getClass().getResource("HmiFXML.fxml"));
         
         Scene scene = new Scene(root);
         primaryStage.setTitle("Notepad--");
         primaryStage.setScene(scene);
-//      scene.getStylesheets().add(getClass().getResource("/styles/DarkTheme.css").toExternalForm());
+        
         scene.getStylesheets().add(getClass().getResource("/Styles/LightTheme.css").toExternalForm());
+        
         Image icon = new Image(getClass().getResourceAsStream("/Images/orange_frog.png"));
         primaryStage.getIcons().add(icon);
         primaryStage.show();
