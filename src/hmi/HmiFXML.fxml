@@ -53,7 +53,7 @@
             </Menu>
           <Menu mnemonicParsing="false" text="More">
             <items>
-                  <RadioMenuItem fx:id="lightThemeButton" mnemonicParsing="false" onAction="#lightTheme" text="Light Theme">
+                  <RadioMenuItem fx:id="lightThemeButton" mnemonicParsing="false" onAction="#lightTheme" selected="true" text="Light Theme">
                      <toggleGroup>
                         <ToggleGroup fx:id="themeToggleGroup" />
                      </toggleGroup>
@@ -86,8 +86,8 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label fx:id="detailWords" alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="footer-color" text="0" />
-                  <Label fx:id="detailLines" alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="footer-color" text="0" GridPane.columnIndex="1" />
+                  <Label fx:id="detailWords" alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="footer-color" text="Words: 0" />
+                  <Label fx:id="detailLines" alignment="BASELINE_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="footer-color" text="Lines: 0" GridPane.columnIndex="1" />
                </children>
             </GridPane>
             <SplitPane fx:id="lastSaved" prefHeight="23.0" prefWidth="195.0" styleClass="footer-color" HBox.hgrow="ALWAYS">

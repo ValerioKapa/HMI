@@ -18,7 +18,7 @@ public class HMI extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("HmiFXML.fxml"));
         
         Scene scene = new Scene(root);
-        primaryStage.setTitle("Notepad--");
+        primaryStage.setTitle("Jotter");
         primaryStage.setScene(scene);
         
         scene.getStylesheets().add(getClass().getResource("/Styles/LightTheme.css").toExternalForm());

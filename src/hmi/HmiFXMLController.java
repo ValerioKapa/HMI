@@ -7,7 +7,6 @@ import com.pdfjet.PDF;
 import com.pdfjet.Page;
 import com.pdfjet.TextBox;
 import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -50,13 +49,13 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
@@ -111,26 +110,31 @@ public class HmiFXMLController implements Initializable {
     private MenuItem paste;
     @FXML
     private MenuItem toPDF;
+    @FXML
+    private RadioMenuItem lightThemeButton;
+    @FXML
+    private ToggleGroup themeToggleGroup;
+    @FXML
+    private RadioMenuItem darkThemeButton;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
-        taEdit.setWrapText(true);
         taEdit.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> ov, String t, String t1) {
                 if (!isModified) {
                     isModified = true;
                     detailFileName.setText(detailFileName.getText() + "*");
+                    HMI.stage.setTitle(detailFileName.getText() + " - Jotter");//Alagh titlou parathirou analoga me to onoma arxeiou
                 }
                 if (taEdit.getText().isEmpty())
                     wcount = lcount = 0;
-                detailWords.setText(String.valueOf(taEdit.getText().split("\\s+").length));
-                detailLines.setText(String.valueOf(taEdit.getText().split("\n").length));
+                detailWords.setText("Words: " + String.valueOf(taEdit.getText().split("\\s+").length));
+                detailLines.setText("Lines: " + String.valueOf(taEdit.getText().split("\n").length));
                 if (taEdit.getText().isEmpty()) {
                     wcount = lcount = 0;
-                    detailWords.setText("0");
-                    detailLines.setText("0");
+                    detailWords.setText("Words: 0");
+                    detailLines.setText("Lines: 0");
                 }
             }        
         });
@@ -138,6 +142,7 @@ public class HmiFXMLController implements Initializable {
         fontSlider.setValue(fontSize);
         fontSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             taEdit.setStyle("-fx-font-size: " + newValue.intValue() + "px");
+            fontSize = newValue.intValue();
         });
         
         ContextMenu cm = new ContextMenu();
@@ -147,7 +152,8 @@ public class HmiFXMLController implements Initializable {
             @Override
             public void handle(ActionEvent t) {
                 taEdit.requestFocus(); 
-                caretPossitionA = taEdit.getCaretPosition();    
+                caretPossitionA = taEdit.getCaretPosition(); 
+                taEdit.selectRange(caretPossitionA, taEdit.getCaretPosition()+1);
             }
         
         });
@@ -156,7 +162,7 @@ public class HmiFXMLController implements Initializable {
         endSelect.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent t) {
-                taEdit.requestFocus(); 
+                taEdit.requestFocus();
                 taEdit.selectRange(caretPossitionA, taEdit.getCaretPosition());
             }
             
@@ -246,15 +252,16 @@ public class HmiFXMLController implements Initializable {
             @Override
             public void handle(KeyEvent t) {
                 if (t.isControlDown() && t.getCode() == KeyCode.COMMA) {
-                    fontSize++;
+                    if (fontSize < 36)
+                        fontSize++;
                     fontSlider.setValue(fontSize);
                 }
                 if (t.isControlDown() && t.getCode() == KeyCode.PERIOD) {
-                    fontSize--;
+                    if (fontSize > 10)
+                        fontSize--;
                     fontSlider.setValue(fontSize);
                 }
             }
-            
         });
     }
     
@@ -284,18 +291,23 @@ public class HmiFXMLController implements Initializable {
             detailWords.setText(String.valueOf(wcount));
             detailLines.setText(String.valueOf(lcount));
         } catch(Exception e) {
-            System.out.println("The User didnt selected any file : " + e.toString());
+            System.out.println("User did not select a file : " + e.toString());
         }
+        taEdit.requestFocus();
     }
     
     @FXML
     private void newFile(ActionEvent event) {
         if (isModified) closeOperation("");
+        taEdit.clear();
         isNew = true;
         isModified = false;
-        if (!detailFileName.getText().equals("New File"))
-            selectedFile = new File(System.getProperty("user.home") + System.lineSeparator() + "New File");
-        detailFileName.setText(selectedFile.getName());
+        if (!detailFileName.getText().equals("New File")) {
+            detailFileName.setText("New File");
+            detailLastSaved.setText("Last Saved");
+        }
+        else if (detailLastSaved.getText().equals("Last Saved"))
+            System.out.println("Already new file"); //selectedFile = new File(System.getProperty("user.home") + System.lineSeparator() + "New File");
     }
 
     @FXML
@@ -307,11 +319,12 @@ public class HmiFXMLController implements Initializable {
                 try {
                     File newFile = fc.showSaveDialog(stage);
                     saveTextToFile(newFile);
+                    selectedFile = newFile;//trelooo, olo themata afth h xazomara
                 } catch (Exception e) {
-                    System.out.println("The User didnt selected any file : " + e.toString());
+                    System.out.println("User did not select a file : " + e.toString());
                 }
-            }
-            saveTextToFile(selectedFile);
+            } else saveTextToFile(selectedFile);
+            HMI.stage.setTitle(selectedFile.getName() + " - Jotter");
         }
     }
 
@@ -378,7 +391,7 @@ public class HmiFXMLController implements Initializable {
     private void closeOperation(String msg) {
         Stage stage = (Stage) details.getScene().getWindow();
         Alert rusure = new Alert(AlertType.CONFIRMATION);
-        rusure.setContentText("Do you want to save the changes?");
+        rusure.setContentText("Do you want to save all changes?");
             
         ButtonType btnSave = new ButtonType("Save");
         ButtonType btnNoSave = new ButtonType("Dont Save");
@@ -397,7 +410,7 @@ public class HmiFXMLController implements Initializable {
             rusure.close();
             selectedFile = null;
         }
-        if (selectedFile == null && msg.equals("exit")) stage.close();
+        if (msg.equals("exit")) stage.close(); //selectedFile == null && msg.equals("exit")
     }
 
     @FXML
@@ -442,6 +455,8 @@ public class HmiFXMLController implements Initializable {
                 
                 pdf.complete();
                 fos.flush();
+                fos.close();
+                bos.close();
                 
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(HmiFXMLController.class.getName()).log(Level.SEVERE, null, ex);
@@ -460,12 +475,12 @@ public class HmiFXMLController implements Initializable {
 
         Text text1=new Text("Δημιουργήθηκε από τους:");
         text1.setStyle("-fx-font-weight: bold");
-        text1.setTranslateY(100);
+        text1.setTranslateY(110);
         text1.setTranslateX(30);
         
-        Text text2=new Text("\n\nΚιόσε Βαλέριο \nΡούμπος Δημήτρης \nΚάτω από την επιμέλεια του Μαρτσέλο");
-        text2.setTranslateY(100);//pano kato
-        text2.setTranslateX(40);//mesa ekso
+        Text text2=new Text("\n\nΚιόσε Βαλέριο \nΡούμπος Δημήτρης \nΒλαδισλάβος Παρασκευόπουλος");
+        text2.setTranslateY(110);//pano kato
+        text2.setTranslateX(40);//deksia aristera
          
         Label aboutLabel = new Label("JavaFX 17 - CSS - PDFjet");
         aboutLabel.setTranslateY(260);
@@ -484,8 +499,10 @@ public class HmiFXMLController implements Initializable {
 	//New window (Stage)
 	Stage newWindow = new Stage();
         newWindow.setResizable(false);
-	newWindow.setTitle("About Notepad--");
+	newWindow.setTitle("About Jotter");
 	newWindow.setScene(secondScene);
+        newWindow.initOwner(stage);
+        newWindow.initModality(Modality.WINDOW_MODAL);
 
 	//Set position of second window, related to primary window.
 	newWindow.setX(stage.getX() + 200);
@@ -499,12 +516,14 @@ public class HmiFXMLController implements Initializable {
 
     @FXML
     private void undoEdit(ActionEvent event) {
-        taEdit.undo();
+        if (taEdit.isUndoable())
+            taEdit.undo();
     }
 
     @FXML
     private void redoEdit(ActionEvent event) {
-        taEdit.redo();
+        if (taEdit.isRedoable())
+            taEdit.redo();
     }
 
     @FXML
