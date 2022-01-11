@@ -6,6 +6,7 @@ import com.pdfjet.Font;
 import com.pdfjet.PDF;
 import com.pdfjet.Page;
 import com.pdfjet.TextBox;
+import com.sun.glass.ui.Cursor;
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -30,6 +31,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.ImageCursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -89,7 +91,7 @@ public class HmiFXMLController implements Initializable {
     @FXML
     private TextArea taEdit;
     @FXML
-    private Label detailFileName;
+    private String detailFileName = "New File";
     @FXML
     private Label detailWords;
     @FXML
@@ -124,13 +126,14 @@ public class HmiFXMLController implements Initializable {
             public void changed(ObservableValue<? extends String> ov, String t, String t1) {
                 if (!isModified) {
                     isModified = true;
-                    detailFileName.setText(detailFileName.getText() + "*");
-                    HMI.stage.setTitle(detailFileName.getText() + " - Jotter");//Alagh titlou parathirou analoga me to onoma arxeiou
+                    HMI.stage.setTitle(detailFileName + "*" + " - Jotter");//Alagh titlou parathirou analoga me to onoma arxeiou
                 }
                 if (taEdit.getText().isEmpty())
                     wcount = lcount = 0;
+                
                 detailWords.setText("Words: " + String.valueOf(taEdit.getText().split("\\s+").length));
                 detailLines.setText("Lines: " + String.valueOf(taEdit.getText().split("\n").length));
+                
                 if (taEdit.getText().isEmpty()) {
                     wcount = lcount = 0;
                     detailWords.setText("Words: 0");
@@ -146,7 +149,12 @@ public class HmiFXMLController implements Initializable {
         });
         
         ContextMenu cm = new ContextMenu();
+      
+       //Εδώ είχαμε ένα feature  το οποίο επέτρεπε στον χρήστη να κάνει highlight ξεκινώντας από ένα σημείο 
+       //ορισμένο από την θέση του Caret. Έπειτα τοποθετώντας το Caret στο επιθυμητό τέλος, η εφαρμογή έκανε 
+       //highlight όλες τις λέξεις ενδιάμεσα.
         
+/*
         MenuItem startSelect = new MenuItem("Start Selection");
         startSelect.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -154,8 +162,9 @@ public class HmiFXMLController implements Initializable {
                 taEdit.requestFocus(); 
                 caretPossitionA = taEdit.getCaretPosition(); 
                 taEdit.selectRange(caretPossitionA, taEdit.getCaretPosition()+1);
-            }
-        
+                Image image = new Image("/Images/cursor.png");
+                taEdit.getScene().lookup("#taEdit .content").setCursor(new ImageCursor(image));                
+           }
         });
         
         MenuItem endSelect = new MenuItem("End Selection");
@@ -164,9 +173,11 @@ public class HmiFXMLController implements Initializable {
             public void handle(ActionEvent t) {
                 taEdit.requestFocus();
                 taEdit.selectRange(caretPossitionA, taEdit.getCaretPosition());
+                taEdit.getScene().lookup("#taEdit .content").setCursor(javafx.scene.Cursor.TEXT);
             }
             
         });
+*/        
         
         MenuItem allSelect = new MenuItem("Select All");
         allSelect.setOnAction(new EventHandler<ActionEvent>() {
@@ -229,8 +240,8 @@ public class HmiFXMLController implements Initializable {
         cm.getItems().add(cmCopy);
         cm.getItems().add(cmPaste);
         cm.getItems().add(new SeparatorMenuItem());
-        cm.getItems().add(startSelect);
-        cm.getItems().add(endSelect);
+        //cm.getItems().add(startSelect);
+        //cm.getItems().add(endSelect);
         cm.getItems().add(allSelect);
         
         taEdit.setContextMenu(cm);
@@ -263,7 +274,7 @@ public class HmiFXMLController implements Initializable {
                 }
             }
         });
-    }
+    }  
     
     @FXML
     private void openFile(ActionEvent event) throws FileNotFoundException, IOException {
@@ -286,8 +297,9 @@ public class HmiFXMLController implements Initializable {
                 
                 isModified = false;
         }
-            detailFileName.setText(selectedFile.getName());
-            detailLastSaved.setText(convertTime(selectedFile.lastModified()));
+            detailFileName = selectedFile.getName();
+            HMI.stage.setTitle(detailFileName + " - Jotter");
+            detailLastSaved.setText("Last Saved " + convertTime(selectedFile.lastModified()));
             detailWords.setText(String.valueOf(wcount));
             detailLines.setText(String.valueOf(lcount));
         } catch(Exception e) {
@@ -302,8 +314,9 @@ public class HmiFXMLController implements Initializable {
         taEdit.clear();
         isNew = true;
         isModified = false;
-        if (!detailFileName.getText().equals("New File")) {
-            detailFileName.setText("New File");
+        if (!detailFileName.equals("New File")) {
+            detailFileName = "New File";
+            HMI.stage.setTitle(selectedFile + " - Jotter");
             detailLastSaved.setText("Last Saved");
         }
         else if (detailLastSaved.getText().equals("Last Saved"))
@@ -374,8 +387,10 @@ public class HmiFXMLController implements Initializable {
             }
             writer.flush();
             writer.close();
-            detailFileName.setText(file.getName());
-            detailLastSaved.setText(convertTime(f.lastModified()));
+            detailFileName = file.getName();
+            HMI.stage.setTitle(selectedFile + " - Jotter");
+            
+            detailLastSaved.setText("Last Saved " + convertTime(f.lastModified()));
         } catch (IOException e) {
             System.out.println(e.toString());
         }
@@ -412,11 +427,23 @@ public class HmiFXMLController implements Initializable {
         }
         if (msg.equals("exit")) stage.close(); //selectedFile == null && msg.equals("exit")
     }
-
+/*    
     @FXML
     private void pdfExport(ActionEvent event) throws Exception{
         
-        taEdit.setWrapText(false);
+        PrinterJob job = PrinterJob.createPrinterJob();
+        Stage stage = (Stage) details.getScene().getWindow();
+        
+        if (job != null) {
+           boolean success = job.showPrintDialog(stage);
+           if (success) {
+               job.endJob();
+           }
+        }       
+    }    
+*/
+    @FXML
+    private void pdfExport(ActionEvent event) throws Exception{
         
         Stage stage = (Stage) details.getScene().getWindow();
         
@@ -433,9 +460,10 @@ public class HmiFXMLController implements Initializable {
             String str = file.getAbsolutePath();
             
             try {
-                FileOutputStream fos = new FileOutputStream(str);
+
+                FileOutputStream fos = new FileOutputStream(str);       
                 BufferedOutputStream bos = new BufferedOutputStream(fos);
-                
+                    
                 PDF pdf = new PDF(bos);
                 Page page = new Page(pdf, A4.PORTRAIT);
                 
@@ -444,19 +472,16 @@ public class HmiFXMLController implements Initializable {
                 TextBox textbox = new TextBox(font);
                 
                 textbox.setLocation(50f, 50f);
-                
-                //Set sizing for an A4 page, cannot be changed by user saddly :)
                 textbox.setWidth(500f);
                 
                 textbox.setNoBorders();
-                
                 textbox.setText(taEdit.getText());
                 textbox.drawOn(page);
                 
                 pdf.complete();
+                bos.close();
                 fos.flush();
                 fos.close();
-                bos.close();
                 
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(HmiFXMLController.class.getName()).log(Level.SEVERE, null, ex);
@@ -514,42 +539,45 @@ public class HmiFXMLController implements Initializable {
 	newWindow.show();        
     }
 
-    @FXML
+    @FXML   
     private void undoEdit(ActionEvent event) {
         if (taEdit.isUndoable())
             taEdit.undo();
     }
 
     @FXML
+    
+    
     private void redoEdit(ActionEvent event) {
         if (taEdit.isRedoable())
             taEdit.redo();
     }
 
+    
     @FXML
     private void copyEdit(ActionEvent event) {
         copy();
     }
 
+    private void copy() {
+        copiedText = "";
+        copiedText = taEdit.getSelectedText();
+    }    
+    
     @FXML
     private void cutEdit(ActionEvent event) {
         cut();
     }
 
-    @FXML
-    private void pasteEdit(ActionEvent event) {
-        paste();
-    }
-    
-    private void copy() {
-        copiedText = "";
-        copiedText = taEdit.getSelectedText();
-    }
-    
     private void cut() {
         copiedText = "";
         copiedText = taEdit.getSelectedText();
         taEdit.setText(taEdit.getText().replace(taEdit.getSelectedText(),"")); // taEdit.replaceSelection("");
+    }    
+    
+    @FXML
+    private void pasteEdit(ActionEvent event) {
+        paste();
     }
     
     private void paste() {
